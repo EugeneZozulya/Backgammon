@@ -1,0 +1,68 @@
+﻿<Window x:Class="Backgammon.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Backgammon"
+        mc:Ignorable="d"
+        Title="Backgammon" WindowStartupLocation="CenterScreen" Cursor="Arrow" Width="{DynamicResource {x:Static SystemParameters.PrimaryScreenWidthKey}}" Height="{DynamicResource {x:Static SystemParameters.PrimaryScreenHeightKey}}" ResizeMode="NoResize" WindowStyle="None" AllowsTransparency="True" WindowState="Maximized" KeyDown="Window_KeyDown">
+    <Window.Background>
+        <ImageBrush ImageSource="Background.png"/>
+    </Window.Background>
+    <Canvas x:Name="canvas" HorizontalAlignment="Left" Height="768" VerticalAlignment="Top" Width="1366" AutomationProperties.Name="canvas">
+        <Rectangle x:Name="rectangle" Fill="#FF8E3103" Height="{DynamicResource {x:Static SystemParameters.PrimaryScreenHeightKey}}" Width="{DynamicResource {x:Static SystemParameters.PrimaryScreenWidthKey}}" Opacity="0.9"/>
+        <Label x:Name="playerVsPlayer" Content="Игрок vs Игрок" FontFamily="/Backgammon;component/#mr_DopestyleG" FontSize="50" Foreground="#FFFFFFCC" Canvas.Left="516" Canvas.Top="164" Cursor="Hand" MouseDown="playerVsPlayer_MouseDown" MouseEnter="playerVsPlayer_MouseEnter" MouseLeave="playerVsPlayer_MouseLeave" Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+        <Label x:Name="backToGame" Content="Вернуться в игру" FontFamily="/Backgammon;component/#mr_DopestyleG" FontSize="50" Foreground="#FFFFFFCC" Canvas.Left="494" Canvas.Top="164" Cursor="Hand" MouseDown="backToGame_MouseDown" MouseEnter="backToGame_MouseEnter" MouseLeave="backToGame_MouseLeave" Visibility="Hidden"/>
+        <Label x:Name="playerVsComp" Content="Игрок vs Компьютер" FontFamily="/Backgammon;component/#mr_DopestyleG" FontSize="50" Foreground="#FFFFFFCC" Canvas.Left="462" Canvas.Top="254" Cursor="Hand" MouseDown="playerVsComp_MouseDown" MouseEnter="playerVsComp_MouseEnter" MouseLeave="playerVsComp_MouseLeave" Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+        <Label x:Name="save" Content="Сохранить игру" FontFamily="/Backgammon;component/#mr_DopestyleG" FontSize="50" Foreground="#FFFFFFCC" Canvas.Left="508" Canvas.Top="342" Cursor="Hand" MouseEnter="save_MouseEnter" MouseLeave="save_MouseLeave" MouseDown="save_MouseDown" Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+        <Label x:Name="load" Content="Загрузить игру" FontFamily="/Backgammon;component/#mr_DopestyleG" FontSize="50" Foreground="#FFFFFFCC" Canvas.Left="524" Canvas.Top="424" Cursor="Hand" MouseEnter="load_MouseEnter" MouseLeave="load_MouseLeave" MouseDown="load_MouseDown" Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+        <Label x:Name="exit" Content="Выход" FontFamily="/Backgammon;component/#mr_DopestyleG" FontSize="50" Foreground="#FFFFFFCC" Canvas.Left="610" Canvas.Top="518" Cursor="Hand" MouseDown="exit_MouseDown" MouseEnter="exit_MouseEnter" MouseLeave="exit_MouseLeave" Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+        <Label x:Name="info" Content="Backgammon v1.0" Canvas.Left="10" Canvas.Top="736" Foreground="#FFFFFFCC"  FontFamily="/Backgammon;component/#mr_DopestyleG" FontSize="16"/>
+        <Label x:Name="menu" Content="Меню" Canvas.Left="1260" Canvas.Top="306" FontFamily="/Backgammon;component/#mr_DopestyleG" FontSize="24" Foreground="#FFFFFFCC" Cursor="Hand" Visibility="Hidden" MouseDown="menu_MouseDown" MouseEnter="menu_MouseEnter" MouseLeave="menu_MouseLeave"/>
+        <Label x:Name="surrender" Content="Сдаться" Canvas.Left="1250" Canvas.Top="418" FontFamily="/Backgammon;component/#mr_DopestyleG" FontSize="20" Foreground="#FFFFFFCC" Cursor="Hand" Visibility="Hidden" MouseDown="surrender_MouseDown" MouseEnter="surrender_MouseEnter" MouseLeave="surrender_MouseLeave"/>
+        <Image x:Name="dice" Height="47" Canvas.Left="1270" Canvas.Top="360" Width="51" Cursor="Hand" Source="dice2.png" Visibility="Hidden" MouseDown="dice_MouseDown"/>
+        <Label x:Name="resultDice" Content="" Canvas.Left="1264" Canvas.Top="361" FontFamily="/Backgammon;component/#mr_DopestyleG" FontSize="22" Foreground="#FFFFFFCC"/>
+        <Image x:Name="lChecker1" Height="67" Canvas.Left="41" Canvas.Top="669" Width="74"/>
+        <Image x:Name="lChecker2" Height="67" Canvas.Left="41" Canvas.Top="649" Width="74"/>
+        <Image x:Name="lChecker3" Height="67" Canvas.Left="41" Canvas.Top="629" Width="74"/>
+        <Image x:Name="lChecker4" Height="67" Canvas.Left="41" Canvas.Top="609" Width="74"/>
+        <Image x:Name="lChecker5" Height="67" Canvas.Left="41" Canvas.Top="589" Width="74"/>
+        <Image x:Name="lChecker6" Height="67" Canvas.Left="41" Canvas.Top="569" Width="74"/>
+        <Image x:Name="lChecker7" Height="67" Canvas.Left="41" Canvas.Top="549" Width="74"/>
+        <Image x:Name="lChecker8" Height="67" Canvas.Left="41" Canvas.Top="529" Width="74"/>
+        <Image x:Name="lChecker9" Height="67" Canvas.Left="41" Canvas.Top="509" Width="74"/>
+        <Image x:Name="lChecker10" Height="67" Canvas.Left="41" Canvas.Top="489" Width="74"/>
+        <Image x:Name="lChecker11" Height="67" Canvas.Left="41" Canvas.Top="469" Width="74"/>
+        <Image x:Name="lChecker12" Height="67" Canvas.Left="41" Canvas.Top="449" Width="74"/>
+        <Image x:Name="lChecker13" Height="67" Canvas.Left="41" Canvas.Top="429" Width="74"/>
+        <Image x:Name="lChecker14" Height="67" Canvas.Left="41" Canvas.Top="409" Width="74"/>
+        <Image x:Name="lChecker15" Height="67" Canvas.Left="41" Canvas.Top="389" Width="74"/>
+        <Image x:Name="rChecker1" Height="66" Canvas.Left="1108" Canvas.Top="24" Width="74"/>
+        <Image x:Name="rChecker2" Height="66" Canvas.Left="1108" Canvas.Top="44" Width="74"/>
+        <Image x:Name="rChecker3" Height="66" Canvas.Left="1108" Canvas.Top="64" Width="74"/>
+        <Image x:Name="rChecker4" Height="66" Canvas.Left="1108" Canvas.Top="84" Width="74"/>
+        <Image x:Name="rChecker5" Height="66" Canvas.Left="1108" Canvas.Top="104" Width="74"/>
+        <Image x:Name="rChecker6" Height="66" Canvas.Left="1108" Canvas.Top="124" Width="74"/>
+        <Image x:Name="rChecker7" Height="66" Canvas.Left="1108" Canvas.Top="144" Width="74"/>
+        <Image x:Name="rChecker8" Height="66" Canvas.Left="1108" Canvas.Top="164" Width="74"/>
+        <Image x:Name="rChecker9" Height="66" Canvas.Left="1108" Canvas.Top="184" Width="74"/>
+        <Image x:Name="rChecker10" Height="66" Canvas.Left="1108" Canvas.Top="204" Width="74"/>
+        <Image x:Name="rChecker11" Height="66" Canvas.Left="1108" Canvas.Top="224" Width="74"/>
+        <Image x:Name="rChecker12" Height="66" Canvas.Left="1108" Canvas.Top="244" Width="74"/>
+        <Image x:Name="rChecker13" Height="66" Canvas.Left="1108" Canvas.Top="264" Width="74"/>
+        <Image x:Name="rChecker14" Height="66" Canvas.Left="1108" Canvas.Top="284" Width="74"/>
+        <Image x:Name="rChecker15" Height="66" Canvas.Left="1108" Canvas.Top="304" Width="74"/>
+        <Image x:Name="result" Height="{DynamicResource {x:Static SystemParameters.PrimaryScreenHeightKey}}" Width="{DynamicResource {x:Static SystemParameters.PrimaryScreenWidthKey}}" Visibility="Hidden" Source="WinPlayer1.png" MouseDown="result_MouseDown"/>
+        <Image x:Name="saveOrDownload" Width="{DynamicResource {x:Static SystemParameters.PrimaryScreenWidthKey}}" Height="{DynamicResource {x:Static SystemParameters.PrimaryScreenHeightKey}}" Source="Save_Download.png" Visibility="Hidden"/>
+        <ListBox x:Name="listDownload" Height="540" Canvas.Left="425" Canvas.Top="110" Width="842" Background="#FF8E3103" FontFamily="/Backgammon;component/#mr_DopestyleG" FontSize="14" Visibility="Hidden"/>
+        <Label x:Name="saveDialog" Content="Сохранить игру" Canvas.Left="30" Canvas.Top="152" Cursor="Hand" FontFamily="/Backgammon;component/#mr_DopestyleG" FontSize="50" Foreground="#FFFFFFCC" Visibility="Hidden" MouseEnter="saveDialog_MouseEnter" MouseLeave="saveDialog_MouseLeave"/>
+        <Label x:Name="downloadDialog" Content="Загрузить игру" Canvas.Left="48" Canvas.Top="152" Cursor="Hand" FontFamily="/Backgammon;component/#mr_DopestyleG" FontSize="50" Foreground="#FFFFFFCC" Visibility="Hidden" MouseEnter="downloadDialog_MouseEnter" MouseLeave="downloadDialog_MouseLeave"/>
+        <Label x:Name="back" Content="Назад" Canvas.Left="132" Canvas.Top="242" FontFamily="/Backgammon;component/#mr_DopestyleG" FontSize="50" Foreground="#FFFFFFCC" Visibility="Hidden" MouseDown="back_MouseDown" MouseEnter="back_MouseEnter" MouseLeave="back_MouseLeave" Cursor="Hand"/>
+        <TextBox x:Name="fileName" Height="32" Canvas.Left="425" TextWrapping="Wrap" Text="" Canvas.Top="655" Width="842" FontFamily="/Backgammon;component/#mr_DopestyleG" Foreground="#FFFFFFCC" Background="#FF8C3206" FontSize="18" Visibility="Hidden" Cursor="Hand"/>
+        <Label x:Name="player2" Content="Player 2" Canvas.Left="1118" Canvas.Top="-4" FontFamily="/Backgammon;component/#mr_DopestyleG" FontSize="14" Foreground="#FFFFFFCC" Visibility="Hidden"/>
+        <Label x:Name="player1" Content="Player 1" Canvas.Left="47" Canvas.Top="738" FontFamily="/Backgammon;component/#mr_DopestyleG" FontSize="14" Foreground="#FFFFFFCC" Visibility="Hidden"/>
+        <Image x:Name="newGame" Height="{DynamicResource {x:Static SystemParameters.PrimaryScreenHeightKey}}" Width="{DynamicResource {x:Static SystemParameters.PrimaryScreenWidthKey}}" Source="NewGame.png" Visibility="Hidden"/>
+        <Label x:Name="yes" Content="Да" Canvas.Left="614" Canvas.Top="304" FontFamily="/Backgammon;component/#mr_DopestyleG" FontSize="90" Foreground="#FFFFFFCC" Visibility="Hidden" MouseDown="yes_MouseDown" MouseEnter="yes_MouseEnter" MouseLeave="yes_MouseLeave"/>
+        <Label x:Name="no" Content="Нет" Canvas.Left="580" Canvas.Top="304" FontFamily="/Backgammon;component/#mr_DopestyleG" FontSize="90" Foreground="#FFFFFFCC" Visibility="Hidden" MouseDown="no_MouseDown" MouseEnter="no_MouseEnter" MouseLeave="no_MouseLeave"/>
+    </Canvas>
+</Window>
