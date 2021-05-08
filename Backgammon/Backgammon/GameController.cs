@@ -196,28 +196,32 @@ namespace Backgammon
         public bool CheckedMove(char numPlayer)
         {
             bool isPossible = false, player1Moves = false, player2Moves = false;
+            int dice3 = 0, dice4 = 0;
+            if (Dices[2] == 2) dice3 = dice4 = Dices[0];
+            else if (Dices[2] == 1) dice3 = Dices[0];
             for (int i = 0; i < gameField.Field.Length; i++)
-            {
+            {            
+                int step = i + Dices[0];
+                int step1 = i + Dices[1];
+                int step2 = i + Dices[0] + Dices[1];
+                int step3 = i + Dices[0] + Dices[1] + dice3 + dice4;
                 if (gameField.Field[i] > 0)
                 {
-                    if ((i + Dices[0] < gameField.Field.Length && gameField.Field[i + Dices[0]] >= 0)
-                        || (i + Dices[1] < gameField.Field.Length && gameField.Field[i + Dices[1]] >= 0)
-                        || (i + Dices[0] + Dices[1] < gameField.Field.Length && gameField.Field[i + Dices[0] + Dices[1]] >= 0))
+                    if ((step < gameField.Field.Length && gameField.Field[step] >= 0)
+                        || (step1 < gameField.Field.Length && gameField.Field[step1] >= 0)
+                        || (step2 < gameField.Field.Length && gameField.Field[step2] >= 0)
+                        || (step3 < gameField.Field.Length && gameField.Field[step3] >= 0))
                         player1Moves = true;
                 }
                 else if (gameField.Field[i] < 0)
                 {
-                    int step = i + Dices[0];
-                    int step1 = i + Dices[1];
-                    int step2 = i + Dices[0] + Dices[1];
-                    //int step3 = 0;
-                    //if(Dices[2]>0)
                     if (step > gameField.Field.Length) step = step - gameField.Field.Length;
                     if (step1 > gameField.Field.Length) step1 = step1 - gameField.Field.Length;
                     if (step2 > gameField.Field.Length) step2 = step2 - gameField.Field.Length;
                     if ((step < gameField.Field.Length / 2 && gameField.Field[step] <= 0)
                         || (step1 < gameField.Field.Length / 2 && gameField.Field[step] <= 0)
-                        || (step2 < gameField.Field.Length / 2 && gameField.Field[step2] <= 0))
+                        || (step2 < gameField.Field.Length / 2 && gameField.Field[step2] <= 0) 
+                        || (step3 < gameField.Field.Length / 2 && gameField.Field[step3] <= 0))
                         player2Moves = true;
                 }
             }
