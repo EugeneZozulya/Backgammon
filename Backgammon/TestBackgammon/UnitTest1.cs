@@ -76,11 +76,55 @@ namespace TestBackgammon
         public void SerchGameTurn()
         {
             game = new GameController(GameMode.playerVsComp);
-            int[] dices = new int[] { 2, 3 };
+            int[] dices = new int[] { 2, 3, 0 };
             int oIndex = 12, nIndex = 17, oldIndex, newIndex;
-            (oldIndex, newIndex) = game.computer.SearchGameTurn(dices, game.gameField);
+            (oldIndex, newIndex) = game.computer.SearchGameTurn(dices, game.gameField, false);
             Assert.AreEqual(oIndex, oldIndex);
             Assert.AreEqual(nIndex, newIndex);
+        }
+        /// <summary>
+        /// Test Checheked move method of the class GameController for the first player.
+        /// </summary>
+        [TestMethod]
+        public void FirstPlayerCheckedMove()
+        {
+            game = new GameController(GameMode.playerVsComp);
+            bool expected = true;
+            game.gameField.Field[0] = 10;
+            game.gameField.Field[2] = 1;
+            game.gameField.Field[7] = 1;
+            game.gameField.Field[8] = 1;
+            game.gameField.Field[4] = 1;
+            game.gameField.Field[9] = 1;
+            game.Dices[0] = 3;
+            game.Dices[0] = 4;
+            bool result = game.CheckedMove('1');
+            Assert.AreEqual(expected, result);
+        }
+        /// <summary>
+        /// Test Checheked move method of the class GameController for the second player.
+        /// </summary>
+        [TestMethod]
+        public void SecondPlayerCheckedMove()
+        {
+            game = new GameController(GameMode.playerVsComp);
+            bool expected = true;
+            game.gameField.Field[0] = 10;
+            game.gameField.Field[2] = 1;
+            game.gameField.Field[7] = 1;
+            game.gameField.Field[8] = 1;
+            game.gameField.Field[4] = 1;
+            game.gameField.Field[9] = 1;
+            game.gameField.Field[12] = -10;
+            game.gameField.Field[13] = -1;
+            game.gameField.Field[15] = -1;
+            game.gameField.Field[14] = -1;
+            game.gameField.Field[16] = -1;
+            game.gameField.Field[20] = -1;
+            game.Dices[0] = 3;
+            game.Dices[0] = 4;
+            bool result = game.CheckedMove('2');
+            Assert.AreEqual(expected, result);
         }
     }
 }

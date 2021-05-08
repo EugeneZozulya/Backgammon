@@ -154,6 +154,9 @@ namespace Backgammon
         void TakeAway(int oldIndex, char numPlayer)
         {
             int length = 0, flag = 1;
+            int dice3 = 0, dice4 = 0;
+            if (Dices[2] == 2) dice3 = dice4 = Dices[0];
+            else if (Dices[2] == 1) dice3 = Dices[0];
             switch (numPlayer)
             {
                 case '1': length = gameField.Field.Length; break;
@@ -177,6 +180,11 @@ namespace Backgammon
                 if (Dices[2] > 1) Dices[2] -= 2;
                 else if (Dices[2] > 0) { Dices[2]--; Dices[1] = 0; }
                 else Dices[1] = Dices[0] = 0;
+            }
+            else if(Dices[2]>0 && ((oldIndex + Dices[0] + Dices[1] + dice3 + dice4) == length))
+            {
+                gameField.Field[oldIndex] -= flag;
+                Dices[0] = Dices[1] = Dices[2] = 0;
             }
 
         }
@@ -202,6 +210,8 @@ namespace Backgammon
                     int step = i + Dices[0];
                     int step1 = i + Dices[1];
                     int step2 = i + Dices[0] + Dices[1];
+                    //int step3 = 0;
+                    //if(Dices[2]>0)
                     if (step > gameField.Field.Length) step = step - gameField.Field.Length;
                     if (step1 > gameField.Field.Length) step1 = step1 - gameField.Field.Length;
                     if (step2 > gameField.Field.Length) step2 = step2 - gameField.Field.Length;
@@ -218,11 +228,20 @@ namespace Backgammon
             }
             return isPossible;
         }
+        /// <summary>
+        /// Moves game pieces.
+        /// </summary>
+        /// <param name="oldIndex"> The number of the cell from which the checker moves. </param>
+        /// <param name="newIndex"> The number of the cell where which the checker moves. </param>
+        /// <param name="numPlayer"> Player number who takes a game turn. Key '1' - the first player, '2' - the second player. </param>
         public void MoveCheckers(int oldIndex, int newIndex, char numPlayer)
         {
             bool firstMove = true;
+            int dice3 = 0, dice4 = 0;
+            if (Dices[2] == 2) dice3 = dice4 = Dices[0];
+            else if (Dices[2] == 1) dice3 = Dices[0];
             int startIndex = 0, countCheckers = 15, step1 = oldIndex + Dices[0], step2 = oldIndex + Dices[1], step3 = oldIndex + Dices[0] + Dices[1],
-                step4 = oldIndex + (Dices[0] + Dices[1]) * 2, flag = 1;
+                step4 = oldIndex + Dices[0] + Dices[1] + dice3 + dice4, flag = 1;
             switch (numPlayer)
             {
                 case '1':
@@ -246,7 +265,7 @@ namespace Backgammon
                 if ((Dices[0] == 6 && Dices[1] == 6) || (Dices[0] == 4 && Dices[1] == 4) || (Dices[0] == 3 && Dices[1] == 3)) firstMove = false;
             }
             else firstMove = false;
-            if (Dices[2] == 2 && step4 == newIndex)
+            if (Dices[2] > 0 && step4 == newIndex)
             {
                 gameField.Field[oldIndex] -= flag;
                 gameField.Field[newIndex] += flag;
