@@ -131,7 +131,7 @@ namespace Backgammon
         /// Determines how many checkers are in the player2 home.
         /// </summary>
         /// <returns> True - all checkers in the home, false - not all checkers in the home. </returns>
-        bool CheckedSecondHome()
+        public bool CheckedSecondHome()
         {
             bool result = false;
             int sum = 0, count = 0;
@@ -195,12 +195,12 @@ namespace Backgammon
         /// <returns> True - he can, false - he can't. </returns>
         public bool CheckedMove(char numPlayer)
         {
-            bool isPossible = false, player1Moves = false, player2Moves = false;
+            bool isPossible = false, player1Moves = false, player2Moves = false, isTwoPart = false;
             int dice3 = 0, dice4 = 0;
             if (Dices[2] == 2) dice3 = dice4 = Dices[0];
             else if (Dices[2] == 1) dice3 = Dices[0];
             for (int i = 0; i < gameField.Field.Length; i++)
-            {            
+            {
                 int step = i + Dices[0];
                 int step1 = i + Dices[1];
                 int step2 = i + Dices[0] + Dices[1];
@@ -215,13 +215,28 @@ namespace Backgammon
                 }
                 else if (gameField.Field[i] < 0)
                 {
-                    if (step > gameField.Field.Length) step = step - gameField.Field.Length;
-                    if (step1 > gameField.Field.Length) step1 = step1 - gameField.Field.Length;
-                    if (step2 > gameField.Field.Length) step2 = step2 - gameField.Field.Length;
-                    if ((step < gameField.Field.Length / 2 && gameField.Field[step] <= 0)
-                        || (step1 < gameField.Field.Length / 2 && gameField.Field[step] <= 0)
-                        || (step2 < gameField.Field.Length / 2 && gameField.Field[step2] <= 0) 
-                        || (step3 < gameField.Field.Length / 2 && gameField.Field[step3] <= 0))
+                    if (step > gameField.Field.Length)
+                    {
+                        step = step - gameField.Field.Length;
+                        isTwoPart = true;
+                    }
+                    if (step1 > gameField.Field.Length)
+                    {
+                        step1 = step1 - gameField.Field.Length;
+                        isTwoPart = true;
+                    }
+                    if (step2 > gameField.Field.Length)
+                    {
+                        step2 = step2 - gameField.Field.Length;
+                        isTwoPart = true;
+                    }
+                    if (step3 > gameField.Field.Length)
+                    {
+                        step3 = step3 - gameField.Field.Length;
+                        isTwoPart = true;
+                    }
+                    if ((isTwoPart && ((step < gameField.Field.Length / 2 && gameField.Field[step] <= 0) || (step1 < gameField.Field.Length / 2 && gameField.Field[step] <= 0) || (step2 < gameField.Field.Length / 2 && gameField.Field[step2] <= 0) || (step3 < gameField.Field.Length / 2 && gameField.Field[step3] <= 0)))
+                        || (!isTwoPart && ((gameField.Field[step] <= 0) || (gameField.Field[step1] <= 0) || (gameField.Field[step2] <= 0) || (gameField.Field[step3] <= 0))))
                         player2Moves = true;
                 }
             }

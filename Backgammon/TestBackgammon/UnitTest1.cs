@@ -41,6 +41,9 @@ namespace TestBackgammon
             game.TakeGameTurn(12, 16);
             Assert.AreEqual(-1, game.gameField.Field[16]);
         }
+        /// <summary>
+        /// Test TakeAway method of GameController class for the first player.
+        /// </summary>
         [TestMethod]
         public void FirstPlayerTakeAway()
         {
@@ -55,6 +58,9 @@ namespace TestBackgammon
             game.TakeGameTurn(19, -1);
             Assert.AreEqual(7, game.gameField.Field[19]);
         }
+        /// <summary>
+        /// Test TakeAway method of GameController class for the second player.
+        /// </summary>
         [TestMethod]
         public void SecondPlayerTakeAway()
         {
@@ -125,6 +131,29 @@ namespace TestBackgammon
             game.Dices[0] = 4;
             bool result = game.CheckedMove('2');
             Assert.AreEqual(expected, result);
+        }
+        /// <summary>
+        /// Test SearchGameTurn method of Computer class, when all checkers are in home.
+        /// </summary>
+        [TestMethod]
+        public void ComputerTakeAway()
+        {
+            game = new GameController(GameMode.playerVsComp);
+            game.gameField.Field[12] = 0;
+            game.gameField.Field[6] = -3;
+            game.gameField.Field[7] = -3;
+            game.gameField.Field[8] = -3;
+            game.gameField.Field[9] = -3;
+            game.gameField.Field[10] = -2;
+            game.gameField.Field[11] = -1;
+            game.Dices[0] = 2;
+            game.Dices[1] = 4;
+            game.Player1.State = false;
+            game.Player2.State = true;
+            int oldIndex, newIndex;
+            (oldIndex, newIndex) = game.computer.SearchGameTurn(game.Dices, game.gameField, game.CheckedSecondHome());
+            game.TakeGameTurn(oldIndex, newIndex);
+            Assert.AreEqual(-2, game.gameField.Field[6]);
         }
     }
 }
