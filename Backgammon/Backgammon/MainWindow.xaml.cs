@@ -24,6 +24,11 @@ namespace Backgammon
         public MainWindow()
         {
             InitializeComponent();
+            ColumnDefinitionCollection columns = saveGame.ColumnDefinitions;
+            RowDefinitionCollection rows = saveGame.RowDefinitions;
+            listSave.Width = listLoad.Width = saveFileName.Width = loadFileName.Width = columns[3].Width.Value;
+            listSave.Height = listLoad.Height = rows[1].Height.Value + rows[2].Height.Value + rows[3].Height.Value;
+            saveFileName.Height = loadFileName.Height = rows[5].Height.Value;
         }
         /// <summary>
         /// MouseDown event of the label "Выход".
@@ -41,36 +46,27 @@ namespace Backgammon
         /// <param name="e"> Object of MouseButtonEventArgs class. </param>
         private void playerVsPlayer_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            game = new GameController(GameMode.playerVsPlayer);
-            //if (firstPlayer != null)
-            //{
-            //    newGame.Visibility = Visibility.Visible;
-            //    no.Visibility = Visibility.Visible;
-            //    yes.Visibility = Visibility.Visible;
-            //    double offset = canvas.Width / 4;
-            //    Canvas.SetLeft(yes, canvas.Width / 2 - offset + offset/4);
-            //    Canvas.SetLeft(no, canvas.Width / 2 + offset / 8);
-            //}
-            //else
-            //{
-            //    firstPlayer = new Player();
-            //    secondPlayer = new Player();  
-            //    visibleField();
-            //    offsetting();
-            //}
-            //hideMenu();
-            //player2.Content = "Player2";  
+            
+            if (game != null) newGame.Visibility = Visibility.Visible;
+            else
+            {
+                game = new GameController(GameMode.playerVsPlayer);
+                control.Visibility = Visibility.Visible;
+                gameField.Visibility = Visibility.Visible;
+            }
+            mainMenu.Visibility = Visibility.Hidden;
+            lPlayer2.Content = "Player2";
         }
         /// <summary>
         /// MouseDown event of the label "Сдаться".
         /// </summary>
         /// <param name="sender"> Object. </param>
         /// <param name="e"> Object of MouseButtonEventArgs class. </param>
-        private void menu_MouseDown(object sender, MouseButtonEventArgs e)
+        private void controlMenu_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            //if (firstPlayer != null) backToGame.Visibility = Visibility.Visible;
-            //hideField();
-            //visibleMenu();
+            if (game != null) backToGame.Visibility = Visibility.Visible;
+            control.Visibility = Visibility.Hidden;
+            mainMenu.Visibility = Visibility.Visible;
         }
         /// <summary>
         /// MouseDown event of the label "Игрок vs Компьютер".
@@ -79,25 +75,16 @@ namespace Backgammon
         /// <param name="e"> Object of MouseButtonEventArgs class. </param>
         private void playerVsComp_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            game = new GameController(GameMode.playerVsComp);
-            //if (firstPlayer != null)
-            //{
-            //    newGame.Visibility = Visibility.Visible;
-            //    no.Visibility = Visibility.Visible;
-            //    yes.Visibility = Visibility.Visible;
-            //    double offset = canvas.Width / 4;
-            //    Canvas.SetLeft(yes, canvas.Width / 2 - offset + offset / 4);
-            //    Canvas.SetLeft(no, canvas.Width / 2 + offset / 8);
-            //}
-            //else
-            //{
-            //    firstPlayer = new Player();
-            //    secondPlayer = new Player();
-            //    visibleField();
-            //    offsetting();
-            //}
-            //player2.Content = "Computer";
-            //hideMenu();
+            
+            if (game != null) newGame.Visibility = Visibility.Visible;
+            else
+            {
+                game = new GameController(GameMode.playerVsComp);
+                control.Visibility = Visibility.Visible;
+                gameField.Visibility = Visibility.Visible;
+            }
+            lPlayer2.Content = "Computer";
+            mainMenu.Visibility = Visibility.Visible;
         }
 
         private void playerVsPlayer_MouseEnter(object sender, MouseEventArgs e)
@@ -160,59 +147,52 @@ namespace Backgammon
             exit.Foreground = new SolidColorBrush(Color.FromRgb(255, 254, 204));
         }
 
-        private void surrender_MouseDown(object sender, MouseButtonEventArgs e)
+        private void controlSurrender_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            //result.Visibility = Visibility.Visible;
-            //hideField();
-            //firstPlayer = null;
-            //secondPlayer = null;
-            //Canvas.SetTop(playerVsPlayer, Canvas.GetTop(playerVsPlayer) - 40);
-            //Canvas.SetTop(playerVsComp, Canvas.GetTop(playerVsComp) - 40);
-            //Canvas.SetTop(save, Canvas.GetTop(save) - 40);
-            //Canvas.SetTop(load, Canvas.GetTop(load) - 40);
-            //Canvas.SetTop(exit, Canvas.GetTop(exit) - 40);
+            resultGame.Visibility = Visibility.Visible;
+            control.Visibility = Visibility.Hidden;
+            gameField.Visibility = Visibility.Hidden;
+            game = null;
         }
 
         private void result_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            result.Visibility = Visibility.Hidden;
-            hideField();
-            visibleMenu();
+            resultGame.Visibility = Visibility.Hidden;
+            backToGame.Visibility = Visibility.Visible;
+            mainMenu.Visibility = Visibility.Visible;
 
         }
 
-        private void menu_MouseEnter(object sender, MouseEventArgs e)
+        private void controlMenu_MouseEnter(object sender, MouseEventArgs e)
         {
-            menu.Foreground = Brushes.White;
+            controlMenu.Foreground = Brushes.White;
         }
 
-        private void menu_MouseLeave(object sender, MouseEventArgs e)
+        private void controlMenu_MouseLeave(object sender, MouseEventArgs e)
         {
-            menu.Foreground = new SolidColorBrush(Color.FromRgb(255, 254, 204));
+            controlMenu.Foreground = new SolidColorBrush(Color.FromRgb(255, 254, 204));
         }
 
-        private void surrender_MouseEnter(object sender, MouseEventArgs e)
+        private void controlSurrender_MouseEnter(object sender, MouseEventArgs e)
         {
-            surrender.Foreground = Brushes.White;
+            controlSurrender.Foreground = Brushes.White;
         }
 
-        private void surrender_MouseLeave(object sender, MouseEventArgs e)
+        private void controlSurrender_MouseLeave(object sender, MouseEventArgs e)
         {
-            surrender.Foreground = new SolidColorBrush(Color.FromRgb(255, 254, 204));
+            controlSurrender.Foreground = new SolidColorBrush(Color.FromRgb(255, 254, 204));
         }
 
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Escape)
             {
-                visibleMenu();
-                hideField();
-                hideSaveOrDownload();
-                //if (firstPlayer != null) backToGame.Visibility = Visibility.Visible;
-                result.Visibility = Visibility.Hidden;
-                newGame.Visibility = Visibility.Hidden;
-                no.Visibility = Visibility.Hidden;
-                yes.Visibility = Visibility.Hidden;
+                control.Visibility = Visibility.Hidden;
+                saveGame.Visibility = Visibility.Hidden;
+                loadGame.Visibility = Visibility.Hidden;
+                resultGame.Visibility = Visibility.Hidden;
+                if (game != null) backToGame.Visibility = Visibility.Visible;
+                mainMenu.Visibility = Visibility.Visible;
             }
         }
 
@@ -228,67 +208,43 @@ namespace Backgammon
             saveDialog.Foreground = new SolidColorBrush(Color.FromRgb(255, 254, 204));
         }
 
-        private void downloadDialog_MouseEnter(object sender, MouseEventArgs e)
+        private void loadDialog_MouseEnter(object sender, MouseEventArgs e)
         {
-            downloadDialog.FontSize = 52;
-            downloadDialog.Foreground = Brushes.White;
+            loadDialog.FontSize = 52;
+            loadDialog.Foreground = Brushes.White;
         }
 
-        private void downloadDialog_MouseLeave(object sender, MouseEventArgs e)
+        private void loadDialog_MouseLeave(object sender, MouseEventArgs e)
         {
-            downloadDialog.FontSize = 50;
-            downloadDialog.Foreground = new SolidColorBrush(Color.FromRgb(255, 254, 204));
-        }
-
-        private void back_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            hideSaveOrDownload();
-            visibleMenu();
-        }
-
-        private void back_MouseEnter(object sender, MouseEventArgs e)
-        {
-            back.FontSize = 52;
-            back.Foreground = Brushes.White;
-        }
-
-        private void back_MouseLeave(object sender, MouseEventArgs e)
-        {
-            back.FontSize = 50;
-            back.Foreground = new SolidColorBrush(Color.FromRgb(255, 254, 204));
+            loadDialog.FontSize = 50;
+            loadDialog.Foreground = new SolidColorBrush(Color.FromRgb(255, 254, 204));
         }
 
         private void save_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            hideField();
-            hideMenu();
-            visibleSaveOrDownload();
-            saveDialog.Visibility = Visibility.Visible;
-            FocusManager.SetFocusedElement(this, fileName);
+            mainMenu.Visibility = Visibility.Hidden;
+            saveGame.Visibility = Visibility.Visible;
+            FocusManager.SetFocusedElement(this, saveFileName);
         }
 
         private void load_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            hideField();
-            hideMenu();
-            visibleSaveOrDownload();
-            downloadDialog.Visibility = Visibility.Visible;
+            mainMenu.Visibility = Visibility.Hidden;
+            loadGame.Visibility = Visibility.Visible;
         }
 
-        private void dice_MouseDown(object sender, MouseButtonEventArgs e)
+        private void controlDice_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            Random rnd = new Random();
-            int dice1 = rnd.Next(1, 6);
-            int dice2 = rnd.Next(1, 6);
-            dice.Visibility = Visibility.Hidden;
+            controlDice.Visibility = Visibility.Hidden;
             resultDice.Visibility = Visibility.Visible;
-            resultDice.Content = dice1.ToString() + " : " + dice2.ToString();
+            game.GenerateDice();
+            resultDice.Content = game.Dices[0].ToString() + " : " + game.Dices[1].ToString();
         }
 
         private void backToGame_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            hideMenu();
-            visibleField();
+            mainMenu.Visibility = Visibility.Hidden;
+            control.Visibility = Visibility.Visible;
         }
 
         private void backToGame_MouseEnter(object sender, MouseEventArgs e)
@@ -302,70 +258,14 @@ namespace Backgammon
             backToGame.FontSize = 50;
             backToGame.Foreground = new SolidColorBrush(Color.FromRgb(255, 254, 204));
         }
-        private void hideMenu()
-        {
-            rectangle.Visibility = Visibility.Hidden;
-            info.Visibility = Visibility.Hidden;
-            playerVsComp.Visibility = Visibility.Hidden;
-            playerVsPlayer.Visibility = Visibility.Hidden;
-            save.Visibility = Visibility.Hidden;
-            load.Visibility = Visibility.Hidden;
-            exit.Visibility = Visibility.Hidden;
-            backToGame.Visibility = Visibility.Hidden;
-        }
-        private void hideField()
-        {
-            menu.Visibility = Visibility.Hidden;
-            dice.Visibility = Visibility.Hidden;
-            surrender.Visibility = Visibility.Hidden;
-            player1.Visibility = Visibility.Hidden;
-            player2.Visibility = Visibility.Hidden;
-            resultDice.Visibility = Visibility.Hidden;
-        }
-        private void visibleMenu()
-        {
-            rectangle.Visibility = Visibility.Visible;
-            info.Visibility = Visibility.Visible;
-            playerVsComp.Visibility = Visibility.Visible;
-            playerVsPlayer.Visibility = Visibility.Visible;
-            save.Visibility = Visibility.Visible;
-            load.Visibility = Visibility.Visible;
-            exit.Visibility = Visibility.Visible;
-        }
-        private void visibleField()
-        {
-            menu.Visibility = Visibility.Visible;
-            dice.Visibility = Visibility.Visible;
-            surrender.Visibility = Visibility.Visible;
-            player1.Visibility = Visibility.Visible;
-            player2.Visibility = Visibility.Visible;
-        }
-        private void visibleSaveOrDownload()
-        {
-            listDownload.Visibility = Visibility.Visible;
-            back.Visibility = Visibility.Visible;
-            fileName.Visibility = Visibility.Visible;
-            saveOrDownload.Visibility = Visibility.Visible;
-
-        }
-        private void hideSaveOrDownload()
-        {
-            saveOrDownload.Visibility = Visibility.Hidden;
-            listDownload.Visibility = Visibility.Hidden;
-            back.Visibility = Visibility.Hidden;
-            saveDialog.Visibility = Visibility.Hidden;
-            fileName.Visibility = Visibility.Hidden;
-            downloadDialog.Visibility = Visibility.Hidden;
-        }
 
         private void yes_MouseDown(object sender, MouseButtonEventArgs e)
         {
             newGame.Visibility = Visibility.Hidden;
-            no.Visibility = Visibility.Hidden;
-            yes.Visibility = Visibility.Hidden;
             //firstPlayer = new Player();
             //secondPlayer = new Player();
-            visibleField();
+            control.Visibility = Visibility.Visible;
+            gameField.Visibility = Visibility.Visible;
         }
 
         private void yes_MouseEnter(object sender, MouseEventArgs e)
@@ -383,10 +283,7 @@ namespace Backgammon
         private void no_MouseDown(object sender, MouseButtonEventArgs e)
         {
             newGame.Visibility = Visibility.Hidden;
-            no.Visibility = Visibility.Hidden;
-            yes.Visibility = Visibility.Hidden;
-            visibleMenu();
-            backToGame.Visibility = Visibility.Visible;
+            mainMenu.Visibility = Visibility.Visible;
         }
 
         private void no_MouseEnter(object sender, MouseEventArgs e)
@@ -401,15 +298,52 @@ namespace Backgammon
             no.Foreground = new SolidColorBrush(Color.FromRgb(255, 254, 204));
         }
 
-        private void offsetting()
+        private void saveBack_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            Canvas.SetTop(backToGame, Canvas.GetTop(playerVsPlayer) - 40);
-            Canvas.SetTop(playerVsPlayer, Canvas.GetTop(playerVsPlayer) + 40);
-            Canvas.SetTop(playerVsComp, Canvas.GetTop(playerVsComp) + 40);
-            Canvas.SetTop(save, Canvas.GetTop(save) + 40);
-            Canvas.SetTop(load, Canvas.GetTop(load) + 40);
-            Canvas.SetTop(exit, Canvas.GetTop(exit) + 40);
+            saveGame.Visibility = Visibility.Hidden;
+            mainMenu.Visibility = Visibility.Visible;
+        }
 
+        private void saveBack_MouseEnter(object sender, MouseEventArgs e)
+        {
+            saveBack.FontSize = 52;
+            saveBack.Foreground = Brushes.White;
+        }
+
+        private void saveBack_MouseLeave(object sender, MouseEventArgs e)
+        {
+            saveBack.FontSize = 50;
+            saveBack.Foreground = new SolidColorBrush(Color.FromRgb(255, 254, 204));
+        }
+
+        private void saveDialog_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            XML.Save(saveFileName.Text, game);
+            saveBack_MouseDown(null, null);
+        }
+
+        private void loadBack_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            loadGame.Visibility = Visibility.Hidden;
+            mainMenu.Visibility = Visibility.Visible;
+        }
+
+        private void loadBack_MouseEnter(object sender, MouseEventArgs e)
+        {
+            loadBack.FontSize = 52;
+            loadBack.Foreground = Brushes.White;
+        }
+
+        private void loadBack_MouseLeave(object sender, MouseEventArgs e)
+        {
+            loadBack.FontSize = 50;
+            loadBack.Foreground = new SolidColorBrush(Color.FromRgb(255, 254, 204));
+        }
+
+        private void loadDialog_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            game = XML.Download(loadFileName.Text);
+            loadBack_MouseDown(null, null);
         }
     }
 }

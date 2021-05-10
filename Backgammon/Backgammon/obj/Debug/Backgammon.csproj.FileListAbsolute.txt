@@ -28,3 +28,5 @@ E:\Courses\Курсовая работа\Backgammon\Backgammon\Backgammon\obj\De
 E:\Courses\Курсовая работа\Backgammon\Backgammon\Backgammon\obj\Debug\Backgammon.csproj.CoreCompileInputs.cache
 E:\Courses\Курсовая работа\Backgammon\Backgammon\Backgammon\obj\Debug\Backgammon.exe
 E:\Courses\Курсовая работа\Backgammon\Backgammon\Backgammon\obj\Debug\Backgammon.pdb
+E:\Courses\Курсовая работа\Backgammon\Backgammon\Backgammon\obj\Debug\Test.g.cs
+E:\Courses\Курсовая работа\Backgammon\Backgammon\Backgammon\obj\Debug\Test.baml
