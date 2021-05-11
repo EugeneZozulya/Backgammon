@@ -111,6 +111,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Black.png" />
     <Resource Include="dice2.png" />
   </ItemGroup>
   <ItemGroup>
@@ -123,11 +124,10 @@
     <Resource Include="Background.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="White.png" />
     <Resource Include="WinComp.png" />
     <Resource Include="WinPlayer1.png" />
     <Resource Include="WinPlayer2.png" />
-    <Resource Include="Светлая шашка.png" />
-    <Resource Include="Темная шашка.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

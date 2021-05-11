@@ -253,7 +253,7 @@ namespace Backgammon
         /// <param name="oldIndex"> The number of the cell from which the checker moves. </param>
         /// <param name="newIndex"> The number of the cell where which the checker moves. </param>
         /// <param name="numPlayer"> Player number who takes a game turn. Key '1' - the first player, '2' - the second player. </param>
-        public void MoveCheckers(int oldIndex, int newIndex, char numPlayer)
+        void MoveCheckers(int oldIndex, int newIndex, char numPlayer)
         {
             bool firstMove = true;
             int dice3 = 0, dice4 = 0;
@@ -317,6 +317,26 @@ namespace Backgammon
                 return;
             }
 
+        }
+        /// <summary>
+        /// Checks if the checkers are on the board.
+        /// </summary>
+        /// <param name="numPlayer"> Player number who takes a game turn. Key '1' - the first player, '2' - the second player. </param>
+        /// <returns> True - win, false - don't win. </returns>
+        public bool CheckedCheckers(char numPlayer)
+        {
+            bool isFirst = false, isSecond = false, result = false;
+            for(int i = 0; i<gameField.Field.Length; i++)
+            {
+                if (gameField.Field[i] < 0) isSecond = true;
+                else if (gameField.Field[i] > 0) isFirst = true;
+            }
+            switch (numPlayer)
+            {
+                case '1': result = isFirst; break;
+                case '2': result = isSecond; break;
+            }
+            return result;
         }
     }
 }

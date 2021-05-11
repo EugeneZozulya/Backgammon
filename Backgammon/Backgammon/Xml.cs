@@ -15,9 +15,9 @@ namespace Backgammon
         /// <param name="game"> Game. </param>
         static public void Save(string fileName, GameController game)
         {
-            if (!Directory.Exists("Save")) Directory.CreateDirectory("Save");
+            if (!Directory.Exists("Saves")) Directory.CreateDirectory("Save");
             XmlSerializer xmlSerializer = new XmlSerializer(typeof(GameController));
-            using (FileStream stream = new FileStream(@"Save\" + fileName, FileMode.Create))
+            using (FileStream stream = new FileStream(@"Saves\" + fileName, FileMode.Create))
             {
                 xmlSerializer.Serialize(stream, game);
             }
@@ -30,10 +30,10 @@ namespace Backgammon
         static public GameController Download(string fileName)
         {
             GameController game = null;
-            if (Directory.Exists("Save"))
+            if (Directory.Exists("Saves"))
             {
                 XmlSerializer xmlSerializer = new XmlSerializer(typeof(GameController));
-                using (FileStream stream = new FileStream(@"Save\" + fileName, FileMode.Create))
+                using (FileStream stream = new FileStream(@"Saves\" + fileName, FileMode.Create))
                 {
                     game = (GameController)xmlSerializer.Deserialize(stream);
                 }
@@ -46,7 +46,7 @@ namespace Backgammon
         /// <returns> Files name and files info. </returns>
         static public (string[], string[]) SearchSave()
         {
-            string[] filesName = Directory.GetFiles("Save");
+            string[] filesName = Directory.GetFiles("Saves");
             string[] filesInfo = new string[filesName.Length];
             for(int i = 0; i<filesName.Length; i++)
             {

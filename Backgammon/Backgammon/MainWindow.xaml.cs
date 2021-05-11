@@ -21,6 +21,7 @@ namespace Backgammon
     public partial class MainWindow : Window
     {
         GameController game;
+        GameMode mode;
         public MainWindow()
         {
             InitializeComponent();
@@ -46,13 +47,14 @@ namespace Backgammon
         /// <param name="e"> Object of MouseButtonEventArgs class. </param>
         private void playerVsPlayer_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            
+            mode = GameMode.playerVsPlayer;
             if (game != null) newGame.Visibility = Visibility.Visible;
             else
             {
-                game = new GameController(GameMode.playerVsPlayer);
+                game = new GameController(mode);
                 control.Visibility = Visibility.Visible;
                 gameField.Visibility = Visibility.Visible;
+                DrawCheckers();
             }
             mainMenu.Visibility = Visibility.Hidden;
             lPlayer2.Content = "Player2";
@@ -66,6 +68,7 @@ namespace Backgammon
         {
             if (game != null) backToGame.Visibility = Visibility.Visible;
             control.Visibility = Visibility.Hidden;
+            gameField.Visibility = Visibility.Hidden;
             mainMenu.Visibility = Visibility.Visible;
         }
         /// <summary>
@@ -75,16 +78,17 @@ namespace Backgammon
         /// <param name="e"> Object of MouseButtonEventArgs class. </param>
         private void playerVsComp_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            
+            mode = GameMode.playerVsPlayer;
             if (game != null) newGame.Visibility = Visibility.Visible;
             else
             {
-                game = new GameController(GameMode.playerVsComp);
+                game = new GameController(mode);
                 control.Visibility = Visibility.Visible;
                 gameField.Visibility = Visibility.Visible;
+                DrawCheckers();
             }
             lPlayer2.Content = "Computer";
-            mainMenu.Visibility = Visibility.Visible;
+            mainMenu.Visibility = Visibility.Hidden;
         }
 
         private void playerVsPlayer_MouseEnter(object sender, MouseEventArgs e)
@@ -155,10 +159,10 @@ namespace Backgammon
             game = null;
         }
 
-        private void result_MouseDown(object sender, MouseButtonEventArgs e)
+        private void resultGame_MouseDown(object sender, MouseButtonEventArgs e)
         {
             resultGame.Visibility = Visibility.Hidden;
-            backToGame.Visibility = Visibility.Visible;
+            backToGame.Visibility = Visibility.Hidden;
             mainMenu.Visibility = Visibility.Visible;
 
         }
@@ -188,6 +192,7 @@ namespace Backgammon
             if (e.Key == Key.Escape)
             {
                 control.Visibility = Visibility.Hidden;
+                gameField.Visibility = Visibility.Hidden;
                 saveGame.Visibility = Visibility.Hidden;
                 loadGame.Visibility = Visibility.Hidden;
                 resultGame.Visibility = Visibility.Hidden;
@@ -245,6 +250,7 @@ namespace Backgammon
         {
             mainMenu.Visibility = Visibility.Hidden;
             control.Visibility = Visibility.Visible;
+            gameField.Visibility = Visibility.Visible;
         }
 
         private void backToGame_MouseEnter(object sender, MouseEventArgs e)
@@ -262,10 +268,10 @@ namespace Backgammon
         private void yes_MouseDown(object sender, MouseButtonEventArgs e)
         {
             newGame.Visibility = Visibility.Hidden;
-            //firstPlayer = new Player();
-            //secondPlayer = new Player();
+            game = new GameController(mode);
             control.Visibility = Visibility.Visible;
             gameField.Visibility = Visibility.Visible;
+            DrawCheckers();
         }
 
         private void yes_MouseEnter(object sender, MouseEventArgs e)
@@ -344,6 +350,45 @@ namespace Backgammon
         {
             game = XML.Download(loadFileName.Text);
             loadBack_MouseDown(null, null);
+        }
+        private void DrawCheckers()
+        {
+            CheckerColor player1Color = game.Player1.Checkers.Color, player2Color = game.Player2.Checkers.Color;
+            BitmapImage image1 = new BitmapImage(new Uri(player1Color.ToString().ToLower() + ".PNG", UriKind.Relative));
+            BitmapImage image2 = new BitmapImage(new Uri(player2Color.ToString().ToLower() + ".PNG", UriKind.Relative));
+            if (player1Color != CheckerColor.Black)
+            {
+                lChecker1.Source = image1;
+                lChecker2.Source = image1;
+                lChecker3.Source = image1;
+                lChecker4.Source = image1;
+                lChecker5.Source = image1;
+                lChecker6.Source = image1;
+                lChecker7.Source = image1;
+                lChecker8.Source = image1;
+                lChecker9.Source = image1;
+                lChecker10.Source = image1;
+                lChecker11.Source = image1;
+                lChecker12.Source = image1;
+                lChecker13.Source = image1;
+                lChecker14.Source = image1;
+                lChecker15.Source = image1;
+                rChecker1.Source = image2;
+                rChecker2.Source = image2;
+                rChecker3.Source = image2;
+                rChecker4.Source = image2;
+                rChecker5.Source = image2;
+                rChecker6.Source = image2;
+                rChecker7.Source = image2;
+                rChecker8.Source = image2;
+                rChecker9.Source = image2;
+                rChecker10.Source = image2;
+                rChecker11.Source = image2;
+                rChecker12.Source = image2;
+                rChecker13.Source = image2;
+                rChecker14.Source = image2;
+                rChecker15.Source = image2;
+            }
         }
     }
 }

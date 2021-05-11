@@ -36,7 +36,7 @@
             <Image x:Name="controlDice" Cursor="Hand" Source="dice2.png" Grid.Column="5" HorizontalAlignment="Center" Height="61" Grid.Row="3" VerticalAlignment="Center" Width="88" Margin="0,5" MouseDown="controlDice_MouseDown"/>
             <Label x:Name="resultDice" Content="" FontFamily="/Backgammon;component/#mr_DopestyleG" FontSize="22" Foreground="#FFFFFFCC" Grid.Column="5" HorizontalAlignment="Center" Margin="10,18,10,10" Grid.Row="3" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="68" Height="43" Visibility="Hidden"/>
         </Grid>
-        <Grid x:Name="mainMenu" HorizontalAlignment="Center" Height="{DynamicResource {x:Static SystemParameters.PrimaryScreenHeightKey}}" VerticalAlignment="Center" Width="{DynamicResource {x:Static SystemParameters.PrimaryScreenWidthKey}}" Background="#FF8E3103" Opacity="0.9" Visibility="Hidden">
+        <Grid x:Name="mainMenu" HorizontalAlignment="Center" Height="{DynamicResource {x:Static SystemParameters.PrimaryScreenHeightKey}}" VerticalAlignment="Center" Width="{DynamicResource {x:Static SystemParameters.PrimaryScreenWidthKey}}" Background="#FF8E3103" Opacity="0.9">
             <Grid.RowDefinitions>
                 <RowDefinition Height="133*"/>
                 <RowDefinition Height="84*"/>
@@ -113,7 +113,7 @@
             <Label x:Name="loadDialog" Content="Загрузить игру" FontFamily="/Backgammon;component/#mr_DopestyleG" FontSize="50" Foreground="#FFFFFFCC" Grid.Column="1" HorizontalAlignment="Center" Grid.Row="1" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="93" Width="379" Padding="5,0,5,5" Cursor="Hand" MouseEnter="loadDialog_MouseEnter" MouseLeave="loadDialog_MouseLeave" MouseDown="loadDialog_MouseDown"/>
             <Label x:Name="loadBack" Content="Назад" FontFamily="/Backgammon;component/#mr_DopestyleG" FontSize="50" Foreground="#FFFFFFCC" Grid.Column="1" HorizontalAlignment="Center" Grid.Row="2" VerticalAlignment="Center" Height="93" Width="379" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Cursor="Hand" Padding="5,0,5,5" MouseDown="loadBack_MouseDown" MouseEnter="loadBack_MouseEnter" MouseLeave="loadBack_MouseLeave"/>
         </Grid>
-        <Grid x:Name="resultGame" HorizontalAlignment="Center" Height="{DynamicResource {x:Static SystemParameters.PrimaryScreenHeightKey}}" VerticalAlignment="Center" Width="{DynamicResource {x:Static SystemParameters.PrimaryScreenWidthKey}}" Visibility="Hidden">
+        <Grid x:Name="resultGame" HorizontalAlignment="Center" Height="{DynamicResource {x:Static SystemParameters.PrimaryScreenHeightKey}}" VerticalAlignment="Center" Width="{DynamicResource {x:Static SystemParameters.PrimaryScreenWidthKey}}" Visibility="Hidden" MouseDown="resultGame_MouseDown">
             <Grid.Background>
                 <ImageBrush ImageSource="WinComp.png"/>
             </Grid.Background>
@@ -127,90 +127,84 @@
                 <ColumnDefinition Width="415*"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="48*"/>
-                <RowDefinition Height="23*"/>
-                <RowDefinition Height="57*"/>
+                <RowDefinition Height="288*"/>
+                <RowDefinition Height="167*"/>
+                <RowDefinition Height="313*"/>
             </Grid.RowDefinitions>
             <Grid.Background>
                 <ImageBrush ImageSource="NewGame.png"/>
             </Grid.Background>
-            <Label x:Name="yes" Content="Да" FontFamily="/Backgammon;component/#mr_DopestyleG" FontSize="90" Foreground="#FFFFFFCC" Grid.Column="1" HorizontalAlignment="Center" Grid.Row="1" VerticalAlignment="Center" Height="118" Width="180" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="5,0,5,5" Margin="10,10,8,10" MouseDown="yes_MouseDown" MouseEnter="yes_MouseEnter" MouseLeave="yes_MouseLeave"/>
-            <Label x:Name="no" Content="Нет" FontFamily="/Backgammon;component/#mr_DopestyleG" FontSize="90" Foreground="#FFFFFFCC" Grid.Column="3" HorizontalAlignment="Center" Grid.Row="1" VerticalAlignment="Center" Height="138" Width="220" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="5,-1,5,5" MinHeight="1" Margin="0,0,3,0" MouseDown="no_MouseDown" MouseEnter="no_MouseEnter" MouseLeave="no_MouseLeave"/>
+            <Label x:Name="yes" Content="Да" FontFamily="/Backgammon;component/#mr_DopestyleG" FontSize="90" Foreground="#FFFFFFCC" Grid.Column="1" HorizontalAlignment="Center" Grid.Row="1" VerticalAlignment="Center" Height="167" Width="198" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="5,0,5,5" MouseDown="yes_MouseDown" MouseEnter="yes_MouseEnter" MouseLeave="yes_MouseLeave"/>
+            <Label x:Name="no" Content="Нет" FontFamily="/Backgammon;component/#mr_DopestyleG" FontSize="90" Foreground="#FFFFFFCC" Grid.Column="3" HorizontalAlignment="Center" Grid.Row="1" VerticalAlignment="Center" Height="167" Width="220" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="5,-1,5,5" MinHeight="1" Margin="0,0,3,0" MouseDown="no_MouseDown" MouseEnter="no_MouseEnter" MouseLeave="no_MouseLeave"/>
         </Grid>
         <Grid x:Name="gameField" HorizontalAlignment="Center" Height="{DynamicResource {x:Static SystemParameters.PrimaryScreenHeightKey}}" VerticalAlignment="Center" Width="{DynamicResource {x:Static SystemParameters.PrimaryScreenWidthKey}}" Visibility="Hidden">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="26*"/>
-                <ColumnDefinition Width="1171*"/>
-                <ColumnDefinition Width="169*"/>
+                <ColumnDefinition Width="13*"/>
+                <ColumnDefinition Width="78*"/>
+                <ColumnDefinition Width="13*"/>
+                <ColumnDefinition Width="77*"/>
+                <ColumnDefinition Width="13*"/>
+                <ColumnDefinition Width="79*"/>
+                <ColumnDefinition Width="11*"/>
+                <ColumnDefinition Width="79*"/>
+                <ColumnDefinition Width="11*"/>
+                <ColumnDefinition Width="79*"/>
+                <ColumnDefinition Width="13*"/>
+                <ColumnDefinition Width="77*"/>
+                <ColumnDefinition Width="84*"/>
+                <ColumnDefinition Width="78*"/>
+                <ColumnDefinition Width="12*"/>
+                <ColumnDefinition Width="79*"/>
+                <ColumnDefinition Width="13*"/>
+                <ColumnDefinition Width="78*"/>
+                <ColumnDefinition Width="12*"/>
+                <ColumnDefinition Width="78*"/>
+                <ColumnDefinition Width="12*"/>
+                <ColumnDefinition Width="78*"/>
+                <ColumnDefinition Width="12*"/>
+                <ColumnDefinition Width="79*"/>
+                <ColumnDefinition Width="13*"/>
+                <ColumnDefinition Width="56*"/>
+                <ColumnDefinition Width="85*"/>
+                <ColumnDefinition Width="28*"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="25*"/>
-                <RowDefinition Height="715*"/>
+                <RowDefinition Height="359*"/>
+                <RowDefinition Height="356*"/>
                 <RowDefinition Height="28*"/>
             </Grid.RowDefinitions>
-            <Grid x:Name="field" Grid.Column="1" HorizontalAlignment="Left" Height="715" Grid.Row="1" VerticalAlignment="Top" Width="1171">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="12*"/>
-                    <ColumnDefinition Width="79*"/>
-                    <ColumnDefinition Width="13*"/>
-                    <ColumnDefinition Width="78*"/>
-                    <ColumnDefinition Width="13*"/>
-                    <ColumnDefinition Width="78*"/>
-                    <ColumnDefinition Width="12*"/>
-                    <ColumnDefinition Width="77*"/>
-                    <ColumnDefinition Width="13*"/>
-                    <ColumnDefinition Width="78*"/>
-                    <ColumnDefinition Width="13*"/>
-                    <ColumnDefinition Width="78*"/>
-                    <ColumnDefinition Width="83*"/>
-                    <ColumnDefinition Width="78*"/>
-                    <ColumnDefinition Width="13*"/>
-                    <ColumnDefinition Width="78*"/>
-                    <ColumnDefinition Width="13*"/>
-                    <ColumnDefinition Width="78*"/>
-                    <ColumnDefinition Width="12*"/>
-                    <ColumnDefinition Width="77*"/>
-                    <ColumnDefinition Width="13*"/>
-                    <ColumnDefinition Width="78*"/>
-                    <ColumnDefinition Width="12*"/>
-                    <ColumnDefinition Width="78*"/>
-                    <ColumnDefinition Width="14*"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
-                <Image x:Name="lChecker1" HorizontalAlignment="Right" Height="77" Margin="0,279,0,0" Grid.Row="1" VerticalAlignment="Top" Width="78" Grid.Column="1"/>
-                <Image x:Name="lChecker2" HorizontalAlignment="Left" Height="77" Margin="0,260,0,0" Grid.Row="1" VerticalAlignment="Top" Width="78" Grid.ColumnSpan="2"/>
-                <Image x:Name="lChecker3" HorizontalAlignment="Left" Height="77" Margin="0,241,0,0" Grid.Row="1" VerticalAlignment="Top" Width="78" Grid.ColumnSpan="2"/>
-                <Image x:Name="lChecker4" HorizontalAlignment="Left" Height="77" Margin="0,222,0,0" Grid.Row="1" VerticalAlignment="Top" Width="78" Grid.ColumnSpan="2"/>
-                <Image x:Name="lChecker5" HorizontalAlignment="Left" Height="77" Margin="0,203,0,0" Grid.Row="1" VerticalAlignment="Top" Width="78" Grid.ColumnSpan="2"/>
-                <Image x:Name="lChecker6" HorizontalAlignment="Left" Height="77" Margin="0,184,0,0" Grid.Row="1" VerticalAlignment="Top" Width="78" Grid.ColumnSpan="2"/>
-                <Image x:Name="lChecker7" HorizontalAlignment="Left" Height="77" Margin="0,165,0,0" Grid.Row="1" VerticalAlignment="Top" Width="78" Grid.ColumnSpan="2"/>
-                <Image x:Name="lChecker8" HorizontalAlignment="Left" Height="77" Margin="0,146,0,0" Grid.Row="1" VerticalAlignment="Top" Width="78" Grid.ColumnSpan="2"/>
-                <Image x:Name="lChecker9" HorizontalAlignment="Left" Height="77" Margin="0,127,0,0" Grid.Row="1" VerticalAlignment="Top" Width="78" Grid.ColumnSpan="2"/>
-                <Image x:Name="lChecker10" HorizontalAlignment="Left" Height="77" Margin="0,108,0,0" Grid.Row="1" VerticalAlignment="Top" Width="78" Grid.ColumnSpan="2"/>
-                <Image x:Name="lChecker11" HorizontalAlignment="Left" Height="77" Margin="0,89,0,0" Grid.Row="1" VerticalAlignment="Top" Width="78" Grid.ColumnSpan="2"/>
-                <Image x:Name="lChecker12" HorizontalAlignment="Left" Height="77" Margin="0,70,0,0" Grid.Row="1" VerticalAlignment="Top" Width="78" Grid.ColumnSpan="2"/>
-                <Image x:Name="lChecker13" HorizontalAlignment="Left" Height="77" Margin="0,51,0,0" Grid.Row="1" VerticalAlignment="Top" Width="78" Grid.ColumnSpan="2"/>
-                <Image x:Name="lChecker14" HorizontalAlignment="Left" Height="77" Margin="0,32,0,0" Grid.Row="1" VerticalAlignment="Top" Width="78" Grid.ColumnSpan="2"/>
-                <Image x:Name="lChecker15" HorizontalAlignment="Left" Height="77" Margin="0,13,0,0" Grid.Row="1" VerticalAlignment="Top" Width="78" Grid.ColumnSpan="2"/>
-                <Image x:Name="rChecker1" HorizontalAlignment="Left" Height="77" VerticalAlignment="Top" Width="78" Grid.Column="23"/>
-                <Image x:Name="rChecker2" HorizontalAlignment="Left" Height="77" VerticalAlignment="Top" Width="78" Grid.Column="23" Margin="0,19,0,0"/>
-                <Image x:Name="rChecker3" HorizontalAlignment="Left" Height="77" VerticalAlignment="Top" Width="78" Grid.Column="23" Margin="0,38,0,0"/>
-                <Image x:Name="rChecker4" HorizontalAlignment="Left" Height="77" VerticalAlignment="Top" Width="78" Grid.Column="23" Margin="0,57,0,0"/>
-                <Image x:Name="rChecker5" HorizontalAlignment="Left" Height="77" VerticalAlignment="Top" Width="78" Grid.Column="23" Margin="0,76,0,0"/>
-                <Image x:Name="rChecker6" HorizontalAlignment="Left" Height="77" VerticalAlignment="Top" Width="78" Grid.Column="23" Margin="0,95,0,0"/>
-                <Image x:Name="rChecker7" HorizontalAlignment="Left" Height="77" VerticalAlignment="Top" Width="78" Grid.Column="23" Margin="0,114,0,0"/>
-                <Image x:Name="rChecker8" HorizontalAlignment="Left" Height="77" VerticalAlignment="Top" Width="78" Grid.Column="23" Margin="0,133,0,0"/>
-                <Image x:Name="rChecker9" HorizontalAlignment="Left" Height="77" VerticalAlignment="Top" Width="78" Grid.Column="23" Margin="0,152,0,0"/>
-                <Image x:Name="rChecker10" HorizontalAlignment="Left" Height="77" VerticalAlignment="Top" Width="78" Grid.Column="23" Margin="0,171,0,0"/>
-                <Image x:Name="rChecker11" HorizontalAlignment="Left" Height="77" VerticalAlignment="Top" Width="78" Grid.Column="23" Margin="0,190,0,0"/>
-                <Image x:Name="rChecker12" HorizontalAlignment="Left" Height="77" VerticalAlignment="Top" Width="78" Grid.Column="23" Margin="0,209,0,0"/>
-                <Image x:Name="rChecker13" HorizontalAlignment="Left" Height="77" VerticalAlignment="Top" Width="78" Grid.Column="23" Margin="0,228,0,0"/>
-                <Image x:Name="rChecker14" HorizontalAlignment="Left" Height="77" VerticalAlignment="Top" Width="78" Grid.Column="23" Margin="0,247,0,0"/>
-                <Image x:Name="rChecker15" HorizontalAlignment="Left" Height="77" VerticalAlignment="Top" Width="78" Grid.Column="23" Margin="0,266,0,0"/>
-            </Grid>
+            <Image  x:Name="lChecker15" Grid.Column="2" HorizontalAlignment="Center" Height="77" Grid.Row="2" VerticalAlignment="Bottom" Width="76" Source="black.png" Margin="1,0"/>
+            <Image x:Name="lChecker14" HorizontalAlignment="Center" Height="77" Margin="1,0,1,19" Grid.Row="2" VerticalAlignment="Bottom" Width="76" Grid.Column="2" Source="black.png"/>
+            <Image x:Name="lChecker13" HorizontalAlignment="Center" Height="77" Margin="1,0,1,38" Grid.Row="2" VerticalAlignment="Bottom" Width="76" Grid.Column="2" Source="black.png"/>
+            <Image x:Name="lChecker12" HorizontalAlignment="Center" Height="77" Margin="1,0,1,57" Grid.Row="2" VerticalAlignment="Bottom" Width="76" Grid.Column="2" Source="black.png"/>
+            <Image x:Name="lChecker11" HorizontalAlignment="Center" Height="77" Margin="1,0,1,76" Grid.Row="2" VerticalAlignment="Bottom" Width="76" Grid.Column="2" Source="black.png"/>
+            <Image x:Name="lChecker10" HorizontalAlignment="Center" Height="77" Margin="1,0,1,95" Grid.Row="2" VerticalAlignment="Bottom" Width="76" Grid.Column="2" Source="black.png"/>
+            <Image x:Name="lChecker9" HorizontalAlignment="Center" Height="77" Margin="1,0,1,114" Grid.Row="2" VerticalAlignment="Bottom" Width="76" Grid.Column="2" Source="black.png"/>
+            <Image x:Name="lChecker8" HorizontalAlignment="Center" Height="77" Margin="1,0,1,133" Grid.Row="2" VerticalAlignment="Bottom" Width="76" Grid.Column="2" Source="black.png"/>
+            <Image x:Name="lChecker7" HorizontalAlignment="Center" Height="77" Margin="1,0,1,152" Grid.Row="2" VerticalAlignment="Bottom" Width="76" Grid.Column="2" Source="black.png"/>
+            <Image x:Name="lChecker6" HorizontalAlignment="Center" Height="77" Margin="1,0,1,171" Grid.Row="2" VerticalAlignment="Bottom" Width="76" Grid.Column="2" Source="black.png"/>
+            <Image x:Name="lChecker5" HorizontalAlignment="Center" Height="77" Margin="1,0,1,190" Grid.Row="2" VerticalAlignment="Bottom" Width="76" Grid.Column="2" Source="black.png"/>
+            <Image x:Name="lChecker4" HorizontalAlignment="Center" Height="77" Margin="1,0,1,209" Grid.Row="2" VerticalAlignment="Bottom" Width="76" Grid.Column="2" Source="black.png"/>
+            <Image x:Name="lChecker3" HorizontalAlignment="Center" Height="77" Margin="1,0,1,228" Grid.Row="2" VerticalAlignment="Bottom" Width="76" Grid.Column="2" Source="black.png"/>
+            <Image x:Name="lChecker2" HorizontalAlignment="Center" Height="77" Margin="1,0,1,247" Grid.Row="2" VerticalAlignment="Bottom" Width="76" Grid.Column="2" Source="black.png"/>
+            <Image x:Name="lChecker1" HorizontalAlignment="Center" Height="77" Margin="1,0,1,266" Grid.Row="2" VerticalAlignment="Bottom" Width="76" Grid.Column="2" Source="black.png"/>
+            <Image x:Name="rChecker15" Grid.Column="24" HorizontalAlignment="Center" Height="77" Grid.Row="1" VerticalAlignment="Top" Width="77" Source="white.png" Margin="1,0"/>
+            <Image x:Name="rChecker14" HorizontalAlignment="Center" Height="77" VerticalAlignment="Top" Width="77" Grid.Column="24" Margin="1,19,1,0" Grid.Row="1" Source="white.png"/>
+            <Image x:Name="rChecker13" HorizontalAlignment="Center" Height="77" VerticalAlignment="Top" Width="77" Grid.Column="24" Margin="1,38,1,0" Grid.Row="1" Source="white.png"/>
+            <Image x:Name="rChecker12" HorizontalAlignment="Center" Height="77" VerticalAlignment="Top" Width="77" Grid.Column="24" Margin="1,57,1,0" Grid.Row="1" Source="white.png"/>
+            <Image x:Name="rChecker11" HorizontalAlignment="Center" Height="77" VerticalAlignment="Top" Width="77" Grid.Column="24" Margin="1,76,1,0" Grid.Row="1" Source="white.png"/>
+            <Image x:Name="rChecker10" HorizontalAlignment="Center" Height="77" VerticalAlignment="Top" Width="77" Grid.Column="24" Margin="1,95,1,0" Grid.Row="1" Source="white.png"/>
+            <Image x:Name="rChecker9" HorizontalAlignment="Center" Height="77" VerticalAlignment="Top" Width="77" Grid.Column="24" Margin="1,114,1,0" Grid.Row="1" Source="white.png"/>
+            <Image x:Name="rChecker8" HorizontalAlignment="Center" Height="77" VerticalAlignment="Top" Width="77" Grid.Column="24" Margin="1,133,1,0" Grid.Row="1" Source="white.png"/>
+            <Image x:Name="rChecker7" HorizontalAlignment="Center" Height="77" VerticalAlignment="Top" Width="77" Grid.Column="24" Margin="1,152,1,0" Grid.Row="1" Source="white.png"/>
+            <Image x:Name="rChecker6" HorizontalAlignment="Center" Height="77" VerticalAlignment="Top" Width="77" Grid.Column="24" Margin="1,171,1,0" Grid.Row="1" Source="white.png"/>
+            <Image x:Name="rChecker5" HorizontalAlignment="Center" Height="77" VerticalAlignment="Top" Width="77" Grid.Column="24" Margin="1,190,1,0" Grid.Row="1" Source="white.png"/>
+            <Image x:Name="rChecker4" HorizontalAlignment="Center" Height="77" VerticalAlignment="Top" Width="77" Grid.Column="24" Margin="1,209,1,0" Grid.Row="1" Source="white.png"/>
+            <Image x:Name="rChecker3" HorizontalAlignment="Center" Height="77" VerticalAlignment="Top" Width="77" Grid.Column="24" Margin="1,228,1,0" Grid.Row="1" Source="white.png"/>
+            <Image x:Name="rChecker2" HorizontalAlignment="Center" Height="77" VerticalAlignment="Top" Width="77" Grid.Column="24" Margin="1,247,1,0" Grid.Row="1" Source="white.png"/>
+            <Image x:Name="rChecker1" HorizontalAlignment="Center" Height="77" VerticalAlignment="Top" Width="77" Grid.Column="24" Margin="1,266,1,0" Grid.Row="1" Source="white.png"/>
         </Grid>
     </Grid>
 </Window>
