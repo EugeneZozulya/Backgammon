@@ -104,7 +104,8 @@ namespace TestBackgammon
             game.gameField.Field[9] = 1;
             game.Dices[0] = 3;
             game.Dices[0] = 4;
-            bool result = game.CheckedMove('1');
+            game.Player1.State = true;
+            bool result = game.CheckedMove();
             Assert.AreEqual(expected, result);
         }
         /// <summary>
@@ -129,7 +130,8 @@ namespace TestBackgammon
             game.gameField.Field[20] = -1;
             game.Dices[0] = 3;
             game.Dices[0] = 4;
-            bool result = game.CheckedMove('2');
+            game.Player2.State = true;
+            bool result = game.CheckedMove();
             Assert.AreEqual(expected, result);
         }
         /// <summary>

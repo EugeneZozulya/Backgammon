@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Backgammon
 {
@@ -42,7 +38,9 @@ namespace Backgammon
             Dices = new int[3];
             gameField = new GameField();
             Player1 = new Player();
-            Player2 = new Player();
+            if (mode == GameMode.playerVsComp)
+                Player2 = new Computer();
+            else Player2 = new Player();
             PrimaryMove();
             gameField.Field[0] = 15;
             gameField.Field[12] = -15;
@@ -89,22 +87,22 @@ namespace Backgammon
             {
                 if (CheckedFirstHome())
                 {
-                    if (newIndex < 0) TakeAway(oldIndex, '1');
+                    if (newIndex < 0) TakeAway(oldIndex);
                 }
                 else
                 {
-                    MoveCheckers(oldIndex, newIndex, '1');
+                    MoveCheckers(oldIndex, newIndex);
                 }
             }
             if (Player2.State)
             {
                 if (CheckedSecondHome())
                 {
-                    if (newIndex < 0) TakeAway(oldIndex, '2');
+                    if (newIndex < 0) TakeAway(oldIndex);
                 }
                 else
                 {
-                    MoveCheckers(oldIndex, newIndex, '2');
+                    MoveCheckers(oldIndex, newIndex);
                 }
             }
         }
@@ -151,8 +149,10 @@ namespace Backgammon
         /// </summary>
         /// <param name="oldIndex"> The number of the cell from which the checker moves. </param>
         /// <param name="numPlayer"> Player number who takes a game turn. Key '1' - the first player, '2' - the second player. </param>
-        void TakeAway(int oldIndex, char numPlayer)
+        void TakeAway(int oldIndex)
         {
+            char numPlayer = '1';
+            if (Player2.State) numPlayer = '2';
             int length = 0, flag = 1;
             int dice3 = 0, dice4 = 0;
             if (Dices[2] == 2) dice3 = dice4 = Dices[0];
@@ -193,10 +193,12 @@ namespace Backgammon
         /// </summary>
         /// <param name="numPlayer"> Player number who takes a game turn. Key '1' - the first player, '2' - the second player. </param>
         /// <returns> True - he can, false - he can't. </returns>
-        public bool CheckedMove(char numPlayer)
+        public bool CheckedMove()
         {
             bool isPossible = false, player1Moves = false, player2Moves = false, isTwoPart = false;
             int dice3 = 0, dice4 = 0;
+            char numPlayer = '1';
+            if (Player2.State) numPlayer = '2';
             if (Dices[2] == 2) dice3 = dice4 = Dices[0];
             else if (Dices[2] == 1) dice3 = Dices[0];
             for (int i = 0; i < gameField.Field.Length; i++)
@@ -253,10 +255,12 @@ namespace Backgammon
         /// <param name="oldIndex"> The number of the cell from which the checker moves. </param>
         /// <param name="newIndex"> The number of the cell where which the checker moves. </param>
         /// <param name="numPlayer"> Player number who takes a game turn. Key '1' - the first player, '2' - the second player. </param>
-        void MoveCheckers(int oldIndex, int newIndex, char numPlayer)
+        void MoveCheckers(int oldIndex, int newIndex)
         {
             bool firstMove = true;
             int dice3 = 0, dice4 = 0;
+            char numPlayer = '1';
+            if (Player2.State) numPlayer = '2';
             if (Dices[2] == 2) dice3 = dice4 = Dices[0];
             else if (Dices[2] == 1) dice3 = Dices[0];
             int startIndex = 0, countCheckers = 15, step1 = oldIndex + Dices[0], step2 = oldIndex + Dices[1], step3 = oldIndex + Dices[0] + Dices[1],
@@ -323,9 +327,11 @@ namespace Backgammon
         /// </summary>
         /// <param name="numPlayer"> Player number who takes a game turn. Key '1' - the first player, '2' - the second player. </param>
         /// <returns> True - win, false - don't win. </returns>
-        public bool CheckedCheckers(char numPlayer)
+        public bool CheckedCheckers()
         {
             bool isFirst = false, isSecond = false, result = false;
+            char numPlayer = '1';
+            if (Player2.State) numPlayer = '2';
             for(int i = 0; i<gameField.Field.Length; i++)
             {
                 if (gameField.Field[i] < 0) isSecond = true;

@@ -3,7 +3,7 @@
     /// <summary>
     /// Artificial intelligence.
     /// </summary>
-    public class Computer
+    public class Computer : Player
     {
         /// <summary>
         /// Search the best game turn.

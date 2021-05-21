@@ -30,6 +30,8 @@ namespace Backgammon
             listSave.Width = listLoad.Width = saveFileName.Width = loadFileName.Width = columns[3].Width.Value;
             listSave.Height = listLoad.Height = rows[1].Height.Value + rows[2].Height.Value + rows[3].Height.Value;
             saveFileName.Height = loadFileName.Height = rows[5].Height.Value;
+            loadFileName.IsReadOnly = true;
+            loadFileName.Focusable = false;
         }
         /// <summary>
         /// MouseDown event of the label "Выход".
@@ -229,7 +231,7 @@ namespace Backgammon
         {
             mainMenu.Visibility = Visibility.Hidden;
             saveGame.Visibility = Visibility.Visible;
-            FocusManager.SetFocusedElement(this, saveFileName);
+            saveFileName.Focus();
         }
 
         private void load_MouseDown(object sender, MouseButtonEventArgs e)
