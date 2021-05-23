@@ -16,8 +16,8 @@ namespace Backgammon
         GameController game;
         GameMode mode;
         Image selectedImage;
-        List<Image> player1Checkers = new List<Image>();
-        List<Image> player2Checkers = new List<Image>();
+        List<Image> player1Checkers;
+        List<Image> player2Checkers;
         bool isFocus = false;
         Border border = new Border();
         public MainWindow()
@@ -45,6 +45,10 @@ namespace Backgammon
             else
             {
                 game = new GameController(mode);
+                game.Dices[0] = game.Dices[1] = 3;
+                game.Dices[2] = 2;
+                game.Player1.State = false;
+                game.Player2.State = true;
                 control.Visibility = Visibility.Visible;
                 gameField.Visibility = Visibility.Visible;
                 DrawCheckers();
@@ -178,36 +182,41 @@ namespace Backgammon
         }
         private void DrawCheckers()
         {
-            player1Checkers.Add(lChecker15);
-            player1Checkers.Add(lChecker14);
-            player1Checkers.Add(lChecker13);
-            player1Checkers.Add(lChecker12);
-            player1Checkers.Add(lChecker11);
-            player1Checkers.Add(lChecker10);
-            player1Checkers.Add(lChecker9);
-            player1Checkers.Add(lChecker8);
-            player1Checkers.Add(lChecker7);
-            player1Checkers.Add(lChecker6);
-            player1Checkers.Add(lChecker5);
-            player1Checkers.Add(lChecker4);
-            player1Checkers.Add(lChecker3);
-            player1Checkers.Add(lChecker2);
-            player1Checkers.Add(lChecker1);
-            player2Checkers.Add(rChecker15);
-            player2Checkers.Add(rChecker14);
-            player2Checkers.Add(rChecker13);
-            player2Checkers.Add(rChecker12);
-            player2Checkers.Add(rChecker11);
-            player2Checkers.Add(rChecker10);
-            player2Checkers.Add(rChecker9);
-            player2Checkers.Add(rChecker8);
-            player2Checkers.Add(rChecker7);
-            player2Checkers.Add(rChecker6);
-            player2Checkers.Add(rChecker5);
-            player2Checkers.Add(rChecker4);
-            player2Checkers.Add(rChecker3);
-            player2Checkers.Add(rChecker2);
-            player2Checkers.Add(rChecker1);
+            if (player1Checkers == null && player2Checkers == null)
+            {
+                player1Checkers = new List<Image>();
+                player2Checkers = new List<Image>();
+                player1Checkers.Add(lChecker15);
+                player1Checkers.Add(lChecker14);
+                player1Checkers.Add(lChecker13);
+                player1Checkers.Add(lChecker12);
+                player1Checkers.Add(lChecker11);
+                player1Checkers.Add(lChecker10);
+                player1Checkers.Add(lChecker9);
+                player1Checkers.Add(lChecker8);
+                player1Checkers.Add(lChecker7);
+                player1Checkers.Add(lChecker6);
+                player1Checkers.Add(lChecker5);
+                player1Checkers.Add(lChecker4);
+                player1Checkers.Add(lChecker3);
+                player1Checkers.Add(lChecker2);
+                player1Checkers.Add(lChecker1);
+                player2Checkers.Add(rChecker15);
+                player2Checkers.Add(rChecker14);
+                player2Checkers.Add(rChecker13);
+                player2Checkers.Add(rChecker12);
+                player2Checkers.Add(rChecker11);
+                player2Checkers.Add(rChecker10);
+                player2Checkers.Add(rChecker9);
+                player2Checkers.Add(rChecker8);
+                player2Checkers.Add(rChecker7);
+                player2Checkers.Add(rChecker6);
+                player2Checkers.Add(rChecker5);
+                player2Checkers.Add(rChecker4);
+                player2Checkers.Add(rChecker3);
+                player2Checkers.Add(rChecker2);
+                player2Checkers.Add(rChecker1);
+            }
             CheckerColor player1Color = game.Player1.Checkers.Color, player2Color = game.Player2.Checkers.Color;
             BitmapImage image1 = new BitmapImage(new Uri("Image/" + player1Color.ToString().ToLower() + ".PNG", UriKind.RelativeOrAbsolute));
             BitmapImage image2 = new BitmapImage(new Uri("Image/" + player2Color.ToString().ToLower() + ".PNG", UriKind.RelativeOrAbsolute));
@@ -232,22 +241,23 @@ namespace Backgammon
         private void selectChecker_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             Image checker = (Image)sender;
+            if (game.Dices[0] == 0 && game.Dices[1] == 0) return;
             if ((game.Player1.State && player1Checkers.Contains(checker)) || (game.Player2.State && player2Checkers.Contains(checker)))
             {
                 gameField.Background = Brushes.Transparent;
                 selectedImage = checker;
-                border.Width = selectedImage.Width;
-                border.Height = selectedImage.Height;
-                UIElementCollection collection = gameField.Children;
-                if (!collection.Contains(border))
-                {
-                    gameField.Children.Add(border);
-                    border.BorderBrush = Brushes.White;
-                }
-                Grid.SetColumn(border, Grid.GetColumn(selectedImage));
-                Grid.SetRow(border, Grid.GetRow(selectedImage));
-                border.Margin = selectedImage.Margin;
-                border.BorderThickness = new Thickness(4);
+                //border.Width = selectedImage.Width;
+                //border.Height = selectedImage.Height;
+                //UIElementCollection collection = gameField.Children;
+                //if (!collection.Contains(border))
+                //{
+                //    gameField.Children.Add(border);
+                //    border.BorderBrush = Brushes.White;
+                //}
+                //Grid.SetColumn(border, Grid.GetColumn(selectedImage));
+                //Grid.SetRow(border, Grid.GetRow(selectedImage));
+                //border.Margin = selectedImage.Margin;
+                //border.BorderThickness = new Thickness(4);
             }
         }
         private void gameField_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -257,30 +267,31 @@ namespace Backgammon
                 Point position = e.GetPosition(gameField);
                 ColumnDefinitionCollection columns = gameField.ColumnDefinitions;
                 int oldindex, newIndex, numRow = 1, numColumn;
-                if (position.Y > gameField.Height/2)
+                if (position.Y > gameField.Height / 2)
                     numRow = 2;
                 numColumn = (int)Math.Round(position.X / (columns[2].ActualWidth + columns[3].ActualWidth));
                 if (position.X > gameField.Width / 2) numColumn--;
                 newIndex = numColumn-1;
-                oldindex = (Grid.GetColumn(selectedImage)-1) / 2;
-                if (numRow == 1 && numColumn<14)
-                {
-                    newIndex = 23 - newIndex;
+                oldindex = (Grid.GetColumn(selectedImage) - 1) / 2;
+                if (Grid.GetRow(selectedImage)==1)
                     oldindex = 23 - oldindex;
-                }
-                if (numColumn > 13)
+                if(numRow == 1) newIndex = 23 - newIndex;
+                if (numColumn > 12)
                 {
                     numColumn = 27;
                     newIndex = -1;
                 }
                 else numColumn *= 2;
                 border.BorderThickness = new Thickness(0);
-                if(GameTurn(oldindex, newIndex))
+                if (GameTurn(oldindex, newIndex))
                 {
-                    Grid.SetRow(selectedImage, numRow);
-                    Grid.SetColumn(selectedImage, numColumn);
-                    if(numRow == 2) selectedImage.Margin =  new Thickness(0, 0, 0, 19 * (game.gameField.Field[newIndex] - 1));
-                    else selectedImage.Margin = new Thickness(0, 19 * -(game.gameField.Field[newIndex] + 1), 0,0);
+                    if(newIndex!=-1)
+                    {
+                        Grid.SetRow(selectedImage, numRow);
+                        Grid.SetColumn(selectedImage, numColumn);
+                    }
+                    if (newIndex == -1) TakeAwayCheckers(oldindex);
+                    else SetMargin(newIndex, numRow);
                 }
                 isFocus = false;
                 gameField.Background = null;
@@ -294,12 +305,13 @@ namespace Backgammon
         //}
         private bool GameTurn(int oldIndex, int newIndex)
         {
-            int countCheckers = game.gameField.Field[newIndex];
+            int countCheckers = 0;
+            if(newIndex>=0 ) countCheckers = game.gameField.Field[newIndex];
             bool isMove = false;
-            if (game.CheckedMove())
+            if (game.CheckedMove() || newIndex == -1)
             {
                 game.TakeGameTurn(oldIndex, newIndex);
-                if ((game.Player1.State && countCheckers < game.gameField.Field[newIndex]) || (game.Player2.State && countCheckers > game.gameField.Field[newIndex]))
+                if (newIndex== -1 || (game.Player1.State && countCheckers < game.gameField.Field[newIndex]) || (game.Player2.State && countCheckers > game.gameField.Field[newIndex]))
                 {
                     isMove = true;
                     ShowDice();
@@ -325,6 +337,35 @@ namespace Backgammon
                 player2Dice.Content = game.Dices[0].ToString() + " : " + game.Dices[1].ToString();
                 player2Dice.Visibility = Visibility.Visible;
                 player1Dice.Visibility = Visibility.Hidden;
+            }
+        }
+        private void TakeAwayCheckers(int oldindex)
+        {
+            if (oldindex > 17 && oldindex <24)
+            {
+                Grid.SetRow(selectedImage, 2);
+                Grid.SetColumn(selectedImage, 27);
+                selectedImage.Margin = new Thickness(0, 0, 0, 10 * -(game.gameField.Field[oldindex] - 14));
+            }
+            else if (oldindex > 5 && oldindex < 12)
+            {
+                Grid.SetRow(selectedImage, 1);
+                Grid.SetColumn(selectedImage, 27);
+                selectedImage.Margin = new Thickness(0, 10 * (game.gameField.Field[oldindex] + 14), 0, 0);
+            }
+        }
+        private void SetMargin(int newIndex, int numRow)
+        {
+            if (game.gameField.Field[newIndex] < 0)
+            {
+                if (numRow == 2) selectedImage.Margin = new Thickness(0, 0, 0, 19 * -(game.gameField.Field[newIndex] + 1));
+                else selectedImage.Margin = new Thickness(0, 19 * -(game.gameField.Field[newIndex] + 1), 0, 0);
+            }
+            else if (game.gameField.Field[newIndex] > 0)
+            {
+                if (numRow == 2) selectedImage.Margin = new Thickness(0, 0, 0, 19 * (game.gameField.Field[newIndex] - 1));
+                else
+                    selectedImage.Margin = new Thickness(0, 19 * (game.gameField.Field[newIndex] - 1), 0, 0);
             }
         }
     }
