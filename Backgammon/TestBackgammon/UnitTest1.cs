@@ -84,7 +84,8 @@ namespace TestBackgammon
             game = new GameController(GameMode.playerVsComp);
             int[] dices = new int[] { 2, 3, 0 };
             int oIndex = 12, nIndex = 17, oldIndex, newIndex;
-            (oldIndex, newIndex) = game.computer.SearchGameTurn(dices, game.gameField, false);
+            Computer computer = (Computer)game.Player2;
+            (oldIndex, newIndex) = computer.SearchGameTurn(dices, game.gameField, false);
             Assert.AreEqual(oIndex, oldIndex);
             Assert.AreEqual(nIndex, newIndex);
         }
@@ -153,7 +154,8 @@ namespace TestBackgammon
             game.Player1.State = false;
             game.Player2.State = true;
             int oldIndex, newIndex;
-            (oldIndex, newIndex) = game.computer.SearchGameTurn(game.Dices, game.gameField, game.CheckedSecondHome());
+            Computer computer = (Computer)game.Player2;
+            (oldIndex, newIndex) = computer.SearchGameTurn(game.Dices, game.gameField, game.CheckedSecondHome());
             game.TakeGameTurn(oldIndex, newIndex);
             Assert.AreEqual(-2, game.gameField.Field[6]);
         }

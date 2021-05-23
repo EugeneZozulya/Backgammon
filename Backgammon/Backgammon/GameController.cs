@@ -20,7 +20,7 @@ namespace Backgammon
         /// <summary>
         /// The second player.
         /// </summary>
-        public Player Player2 { get; }
+        public Player Player2 { get; set; }
         /// <summary>
         /// Game mode.
         /// </summary>
@@ -79,6 +79,8 @@ namespace Backgammon
                 Player1.Checkers.Color = CheckerColor.Black;
                 Player2.State = true;
             }
+            for (int i = 0; i < Dices.Length; i++)
+                Dices[i] = 0;
         }
         /// <summary>
         /// Take a game turn.
@@ -89,9 +91,9 @@ namespace Backgammon
         {
             if (Player1.State)
             {
-                if (CheckedFirstHome())
+                if (CheckedFirstHome() && newIndex < 0)
                 {
-                    if (newIndex < 0) TakeAway(oldIndex);
+                    TakeAway(oldIndex);
                 }
                 else
                 {
@@ -100,9 +102,9 @@ namespace Backgammon
             }
             if (Player2.State)
             {
-                if (CheckedSecondHome())
+                if (CheckedSecondHome() && newIndex < 0)
                 {
-                    if (newIndex < 0) TakeAway(oldIndex);
+                    TakeAway(oldIndex);
                 }
                 else
                 {
@@ -152,7 +154,6 @@ namespace Backgammon
         /// Take away a checkers on the side of the game board.
         /// </summary>
         /// <param name="oldIndex"> The number of the cell from which the checker moves. </param>
-        /// <param name="numPlayer"> Player number who takes a game turn. Key '1' - the first player, '2' - the second player. </param>
         void TakeAway(int oldIndex)
         {
             char numPlayer = '1';
@@ -195,7 +196,6 @@ namespace Backgammon
         /// <summary>
         /// Checks if the player can take a game turn.
         /// </summary>
-        /// <param name="numPlayer"> Player number who takes a game turn. Key '1' - the first player, '2' - the second player. </param>
         /// <returns> True - he can, false - he can't. </returns>
         public bool CheckedMove()
         {

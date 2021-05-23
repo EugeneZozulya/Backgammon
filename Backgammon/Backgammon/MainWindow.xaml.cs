@@ -1,17 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Backgammon
 {
@@ -149,18 +142,7 @@ namespace Backgammon
         private void controlDice_MouseDown(object sender, MouseButtonEventArgs e)
         {
             game.GenerateDice();
-            if (game.Player1.State)
-            {
-                player1Dice.Content = game.Dices[0].ToString() + " : " + game.Dices[1].ToString();
-                player1Dice.Visibility = Visibility.Visible;
-                player2Dice.Visibility = Visibility.Hidden;
-            }
-            else if (game.Player2.State)
-            {
-                player2Dice.Content = game.Dices[0].ToString() + " : " + game.Dices[1].ToString();
-                player2Dice.Visibility = Visibility.Visible;
-                player1Dice.Visibility = Visibility.Hidden;
-            }
+            ShowDice();
         }
         private void backToGame_MouseDown(object sender, MouseButtonEventArgs e)
         {
@@ -249,17 +231,24 @@ namespace Backgammon
         private void noOrYesText_MouseLeave(object sender, MouseEventArgs e) => Animation((Label)sender, 90, Color.FromRgb(255, 254, 204));
         private void selectChecker_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            selectedImage = (Image)sender;
-            border.Width = selectedImage.Width;
-            border.Height = selectedImage.Height;
-            border.BorderBrush = Brushes.White;
-            UIElementCollection collection = gameField.Children;
-            if (!collection.Contains(border))
-                gameField.Children.Add(border);
-            Grid.SetColumn(border, Grid.GetColumn(selectedImage));
-            Grid.SetRow(border, Grid.GetRow(selectedImage));
-            border.Margin = selectedImage.Margin;
-            border.BorderThickness = new Thickness(4);
+            Image checker = (Image)sender;
+            if ((game.Player1.State && player1Checkers.Contains(checker)) || (game.Player2.State && player2Checkers.Contains(checker)))
+            {
+                gameField.Background = Brushes.Transparent;
+                selectedImage = checker;
+                border.Width = selectedImage.Width;
+                border.Height = selectedImage.Height;
+                UIElementCollection collection = gameField.Children;
+                if (!collection.Contains(border))
+                {
+                    gameField.Children.Add(border);
+                    border.BorderBrush = Brushes.White;
+                }
+                Grid.SetColumn(border, Grid.GetColumn(selectedImage));
+                Grid.SetRow(border, Grid.GetRow(selectedImage));
+                border.Margin = selectedImage.Margin;
+                border.BorderThickness = new Thickness(4);
+            }
         }
         private void gameField_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
@@ -268,16 +257,75 @@ namespace Backgammon
                 Point position = e.GetPosition(gameField);
                 ColumnDefinitionCollection columns = gameField.ColumnDefinitions;
                 int oldindex, newIndex, numRow = 1, numColumn;
-                if (position.Y < gameField.Height)
+                if (position.Y > gameField.Height/2)
                     numRow = 2;
                 numColumn = (int)Math.Round(position.X / (columns[2].ActualWidth + columns[3].ActualWidth));
                 if (position.X > gameField.Width / 2) numColumn--;
-                numColumn *= 2;
+                newIndex = numColumn-1;
+                oldindex = (Grid.GetColumn(selectedImage)-1) / 2;
+                if (numRow == 1 && numColumn<14)
+                {
+                    newIndex = 23 - newIndex;
+                    oldindex = 23 - oldindex;
+                }
+                if (numColumn > 13)
+                {
+                    numColumn = 27;
+                    newIndex = -1;
+                }
+                else numColumn *= 2;
                 border.BorderThickness = new Thickness(0);
-                //перемещение фишки с помощью GameController
+                if(GameTurn(oldindex, newIndex))
+                {
+                    Grid.SetRow(selectedImage, numRow);
+                    Grid.SetColumn(selectedImage, numColumn);
+                    if(numRow == 2) selectedImage.Margin =  new Thickness(0, 0, 0, 19 * (game.gameField.Field[newIndex] - 1));
+                    else selectedImage.Margin = new Thickness(0, 19 * -(game.gameField.Field[newIndex] + 1), 0,0);
+                }
                 isFocus = false;
+                gameField.Background = null;
             }
-            isFocus = true;
+            else if(selectedImage!=null) isFocus = true;
+        }
+        //private void gameField_MouseEnter(object sender, MouseEventArgs e)
+        //{
+        //    if (selectedImage != null) Backgammon.Cursor = Cursors.Hand;
+        //    else Backgammon.Cursor = Cursors.Arrow;
+        //}
+        private bool GameTurn(int oldIndex, int newIndex)
+        {
+            int countCheckers = game.gameField.Field[newIndex];
+            bool isMove = false;
+            if (game.CheckedMove())
+            {
+                game.TakeGameTurn(oldIndex, newIndex);
+                if ((game.Player1.State && countCheckers < game.gameField.Field[newIndex]) || (game.Player2.State && countCheckers > game.gameField.Field[newIndex]))
+                {
+                    isMove = true;
+                    ShowDice();
+                    if (game.Dices[0] == 0 && game.Dices[1] == 0 && game.Dices[2] == 0)
+                    {
+                        game.Player1.State = !game.Player1.State;
+                        game.Player2.State = !game.Player2.State;
+                    }
+                }
+            }
+            return isMove;
+        }
+        private void ShowDice()
+        {
+            if (game.Player1.State)
+            {
+                player1Dice.Content = game.Dices[0].ToString() + " : " + game.Dices[1].ToString();
+                player1Dice.Visibility = Visibility.Visible;
+                player2Dice.Visibility = Visibility.Hidden;
+            }
+            else if (game.Player2.State)
+            {
+                player2Dice.Content = game.Dices[0].ToString() + " : " + game.Dices[1].ToString();
+                player2Dice.Visibility = Visibility.Visible;
+                player1Dice.Visibility = Visibility.Hidden;
+            }
         }
     }
 }
