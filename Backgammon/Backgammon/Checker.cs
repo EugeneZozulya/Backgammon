@@ -1,5 +1,8 @@
-﻿namespace Backgammon
+﻿using System;
+
+namespace Backgammon
 {
+    [Serializable]
     /// <summary>
     /// Checker.
     /// </summary>

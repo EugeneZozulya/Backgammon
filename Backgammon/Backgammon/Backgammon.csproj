@@ -101,8 +101,8 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Resource Include="19510.otf" />
     <None Include="ClassDiagram1.cd" />
+    <Resource Include="Font\19510.otf" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -112,23 +112,15 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Black.png" />
-    <Resource Include="dice2.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="NewGame.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Save_Download.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Background.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="White.png" />
-    <Resource Include="WinComp.png" />
-    <Resource Include="WinPlayer1.png" />
-    <Resource Include="WinPlayer2.png" />
+    <Resource Include="Image\Background.png" />
+    <Resource Include="Image\Black.png" />
+    <Resource Include="Image\dice2.png" />
+    <Resource Include="Image\NewGame.png" />
+    <Resource Include="Image\Save_Download.png" />
+    <Resource Include="Image\White.png" />
+    <Resource Include="Image\WinComp.png" />
+    <Resource Include="Image\WinPlayer1.png" />
+    <Resource Include="Image\WinPlayer2.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -15,9 +15,9 @@ namespace Backgammon
         /// <param name="game"> Game. </param>
         static public void Save(string fileName, GameController game)
         {
-            if (!Directory.Exists("Saves")) Directory.CreateDirectory("Save");
+            if (!Directory.Exists("Saves")) Directory.CreateDirectory("Saves");
             XmlSerializer xmlSerializer = new XmlSerializer(typeof(GameController));
-            using (FileStream stream = new FileStream(@"Saves\" + fileName, FileMode.Create))
+            using (FileStream stream = new FileStream(Path.GetFullPath("Saves") + "\\" + fileName + ".xml", FileMode.Create))
             {
                 xmlSerializer.Serialize(stream, game);
             }

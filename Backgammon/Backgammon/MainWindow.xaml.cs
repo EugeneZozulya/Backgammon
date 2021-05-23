@@ -99,8 +99,8 @@ namespace Backgammon
         }
         private void controlSurrender_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            BitmapImage winPlayer1 = new BitmapImage(new Uri("E:\\Courses\\Курсовая работа\\Backgammon\\Backgammon\\Backgammon\\WinPlayer1.png", UriKind.Absolute));
-            BitmapImage winPlayer2 = new BitmapImage(new Uri("E:\\Courses\\Курсовая работа\\Backgammon\\Backgammon\\Backgammon\\WinPlayer2.png", UriKind.Absolute));
+            ImageSource winPlayer1 = new BitmapImage(new Uri("pack://application:,,,/Backgammon;component/Image/WinPlayer1.png", UriKind.RelativeOrAbsolute));
+            ImageSource winPlayer2 = new BitmapImage(new Uri("pack://application:,,,/Backgammon;component/Image/WinPlayer2.png", UriKind.RelativeOrAbsolute));
             if (game.Player1.State && game.Mode == GameMode.playerVsPlayer) resultGame.Background = new ImageBrush(winPlayer2);
             else if (game.Player2.State) resultGame.Background = new ImageBrush(winPlayer1);
             resultGame.Visibility = Visibility.Visible;
@@ -176,6 +176,7 @@ namespace Backgammon
             newGame.Visibility = Visibility.Hidden;
             game = new GameController(mode);
             gameField.Visibility = Visibility.Visible;
+            control.Visibility = Visibility.Visible;
             DrawCheckers();
         }
         private void no_MouseDown(object sender, MouseButtonEventArgs e)
@@ -236,8 +237,8 @@ namespace Backgammon
             player2Checkers.Add(rChecker2);
             player2Checkers.Add(rChecker1);
             CheckerColor player1Color = game.Player1.Checkers.Color, player2Color = game.Player2.Checkers.Color;
-            BitmapImage image1 = new BitmapImage(new Uri(player1Color.ToString().ToLower() + ".PNG", UriKind.Relative));
-            BitmapImage image2 = new BitmapImage(new Uri(player2Color.ToString().ToLower() + ".PNG", UriKind.Relative));
+            BitmapImage image1 = new BitmapImage(new Uri("Image/" + player1Color.ToString().ToLower() + ".PNG", UriKind.RelativeOrAbsolute));
+            BitmapImage image2 = new BitmapImage(new Uri("Image/" + player2Color.ToString().ToLower() + ".PNG", UriKind.RelativeOrAbsolute));
             if (player1Color != CheckerColor.Black)
             {
                 for (int i = 0; i < player2Checkers.Count; i++)

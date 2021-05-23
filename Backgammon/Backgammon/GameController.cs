@@ -22,16 +22,13 @@ namespace Backgammon
         /// </summary>
         public Player Player2 { get; }
         /// <summary>
-        /// Artificial intelligence.
-        /// </summary>
-        public Computer computer { get; }
-        /// <summary>
         /// Game mode.
         /// </summary>
         public GameMode Mode { get; }
         /// <summary>
-        /// Constructor without parametrs.
+        /// Constructor with parametrs.
         /// </summary>
+        /// <param name="mode"> Game mode. </param>
         public GameController(GameMode mode)
         {
             Mode = mode;
@@ -44,7 +41,13 @@ namespace Backgammon
             PrimaryMove();
             gameField.Field[0] = 15;
             gameField.Field[12] = -15;
-            computer = new Computer();
+        }
+        /// <summary>
+        /// Constructor without parametrs.
+        /// </summary>
+        public GameController()
+        {
+
         }
         /// <summary>
         /// Generate dice.
@@ -55,6 +58,7 @@ namespace Backgammon
             for (int i = 0; i < Dices.Length - 1; i++)
                 Dices[i] = rnd.Next(1, 6);
             if (Dices[0] == Dices[1]) Dices[2] = 2;
+            else Dices[2] = 0;
         }
         /// <summary>
         /// Determines who moves first and the color of each player's checkers.

@@ -1,6 +1,9 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\Backgammon",
+    "\\Backgammon\\Backgammon"
   ],
+  "SelectedNode": "\\Backgammon\\Backgammon",
   "PreviewInSolutionExplorer": false
 }
