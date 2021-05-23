@@ -30,13 +30,6 @@ namespace Backgammon
         public MainWindow()
         {
             InitializeComponent();
-            ColumnDefinitionCollection columns = saveGame.ColumnDefinitions;
-            RowDefinitionCollection rows = saveGame.RowDefinitions;
-            listSave.Width = listLoad.Width = saveFileName.Width = loadFileName.Width = columns[3].Width.Value;
-            listSave.Height = listLoad.Height = rows[1].Height.Value + rows[2].Height.Value + rows[3].Height.Value;
-            saveFileName.Height = loadFileName.Height = rows[5].Height.Value;
-            loadFileName.IsReadOnly = true;
-            loadFileName.Focusable = false;
         }
         /// <summary>
         /// MouseDown event of the label "Выход".
@@ -131,8 +124,8 @@ namespace Backgammon
             {
                 gameField.Visibility = Visibility.Hidden;
                 control.Visibility = Visibility.Hidden;
-                saveGame.Visibility = Visibility.Hidden;
-                loadGame.Visibility = Visibility.Hidden;
+                saveOrDownload.Visibility = Visibility.Hidden;
+                dialog.Visibility = Visibility.Hidden;
                 resultGame.Visibility = Visibility.Hidden;
                 if (game != null) backToGame.Visibility = Visibility.Visible;
                 mainMenu.Visibility = Visibility.Visible;
@@ -141,13 +134,17 @@ namespace Backgammon
         private void save_MouseDown(object sender, MouseButtonEventArgs e)
         {
             mainMenu.Visibility = Visibility.Hidden;
-            saveGame.Visibility = Visibility.Visible;
-            saveFileName.Focus();
+            saveOrDownload.Visibility = Visibility.Visible;
+            dialog.Visibility = Visibility.Visible;
+            loadingOrSaving.Content = "Сохранить игру";
+            fileName.Focus();
         }
         private void load_MouseDown(object sender, MouseButtonEventArgs e)
         {
             mainMenu.Visibility = Visibility.Hidden;
-            loadGame.Visibility = Visibility.Visible;
+            saveOrDownload.Visibility = Visibility.Visible;
+            dialog.Visibility = Visibility.Visible;
+            loadingOrSaving.Content = "Загрузить игру";
         }
         private void controlDice_MouseDown(object sender, MouseButtonEventArgs e)
         {
@@ -184,25 +181,18 @@ namespace Backgammon
             newGame.Visibility = Visibility.Hidden;
             mainMenu.Visibility = Visibility.Visible;
         }
-        private void saveBack_MouseDown(object sender, MouseButtonEventArgs e)
+        private void back_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            saveGame.Visibility = Visibility.Hidden;
+            saveOrDownload.Visibility = Visibility.Hidden;
+            dialog.Visibility = Visibility.Hidden;
             mainMenu.Visibility = Visibility.Visible;
         }
-        private void saveDialog_MouseDown(object sender, MouseButtonEventArgs e)
+        private void loadOrSave_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            XML.Save(saveFileName.Text, game);
-            saveBack_MouseDown(null, null);
-        }
-        private void loadBack_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            loadGame.Visibility = Visibility.Hidden;
-            mainMenu.Visibility = Visibility.Visible;
-        }
-        private void loadDialog_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            game = XML.Download(loadFileName.Text);
-            loadBack_MouseDown(null, null);
+            if(loadingOrSaving.Content.ToString() == "Сохранить игру")
+                XML.Save(fileName.Text, game);
+            else game = XML.Download(fileName.Text);
+            back_MouseDown(null, null);
         }
         private void DrawCheckers()
         {
@@ -271,7 +261,6 @@ namespace Backgammon
             border.Margin = selectedImage.Margin;
             border.BorderThickness = new Thickness(4);
         }
-
         private void gameField_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (selectedImage != null && isFocus)

@@ -8,14 +8,6 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("image/background.png")]
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("image/black.png")]
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("image/dice2.png")]
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("image/newgame.png")]
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("image/save_download.png")]
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("image/white.png")]
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("image/wincomp.png")]
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("image/winplayer1.png")]
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("image/winplayer2.png")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("logo.png")]
 
 
