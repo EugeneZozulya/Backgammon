@@ -22,6 +22,11 @@ namespace Backgammon
     {
         GameController game;
         GameMode mode;
+        Image selectedImage;
+        List<Image> player1Checkers = new List<Image>();
+        List<Image> player2Checkers = new List<Image>();
+        bool isFocus = false;
+        Border border = new Border();
         public MainWindow()
         {
             InitializeComponent();
@@ -69,8 +74,8 @@ namespace Backgammon
         private void controlMenu_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (game != null) backToGame.Visibility = Visibility.Visible;
-            control.Visibility = Visibility.Hidden;
             gameField.Visibility = Visibility.Hidden;
+            control.Visibility = Visibility.Hidden;
             mainMenu.Visibility = Visibility.Visible;
         }
         /// <summary>
@@ -85,82 +90,24 @@ namespace Backgammon
             else
             {
                 game = new GameController(mode);
-                control.Visibility = Visibility.Visible;
                 gameField.Visibility = Visibility.Visible;
+                control.Visibility = Visibility.Visible;
                 DrawCheckers();
             }
             lPlayer2.Content = "Computer";
             mainMenu.Visibility = Visibility.Hidden;
         }
-
-        private void playerVsPlayer_MouseEnter(object sender, MouseEventArgs e)
-        {
-            playerVsPlayer.FontSize = 52;
-            playerVsPlayer.Foreground = Brushes.White;
-        }
-
-        private void playerVsPlayer_MouseLeave(object sender, MouseEventArgs e)
-        {
-            playerVsPlayer.FontSize = 50;
-            playerVsPlayer.Foreground = new SolidColorBrush(Color.FromRgb(255, 254, 204));
-        }
-
-        private void playerVsComp_MouseEnter(object sender, MouseEventArgs e)
-        {
-            playerVsComp.FontSize = 52;
-            playerVsComp.Foreground = Brushes.White;
-        }
-
-        private void playerVsComp_MouseLeave(object sender, MouseEventArgs e)
-        {
-            playerVsComp.FontSize = 50;
-            playerVsComp.Foreground = new SolidColorBrush(Color.FromRgb(255, 254, 204));
-        }
-
-        private void save_MouseEnter(object sender, MouseEventArgs e)
-        {
-            save.FontSize = 52;
-            save.Foreground = Brushes.White;
-        }
-
-        private void save_MouseLeave(object sender, MouseEventArgs e)
-        {
-            save.FontSize = 50;
-            save.Foreground = new SolidColorBrush(Color.FromRgb(255, 254, 204));
-        }
-
-        private void load_MouseEnter(object sender, MouseEventArgs e)
-        {
-            load.FontSize = 52;
-            load.Foreground = Brushes.White;
-        }
-
-        private void load_MouseLeave(object sender, MouseEventArgs e)
-        {
-            load.FontSize = 50;
-            load.Foreground = new SolidColorBrush(Color.FromRgb(255, 254, 204));
-        }
-
-        private void exit_MouseEnter(object sender, MouseEventArgs e)
-        {
-            exit.FontSize = 52;
-            exit.Foreground = Brushes.White;
-        }
-
-        private void exit_MouseLeave(object sender, MouseEventArgs e)
-        {
-            exit.FontSize = 50;
-            exit.Foreground = new SolidColorBrush(Color.FromRgb(255, 254, 204));
-        }
-
         private void controlSurrender_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            BitmapImage winPlayer1 = new BitmapImage(new Uri("E:\\Courses\\Курсовая работа\\Backgammon\\Backgammon\\Backgammon\\WinPlayer1.png", UriKind.Absolute));
+            BitmapImage winPlayer2 = new BitmapImage(new Uri("E:\\Courses\\Курсовая работа\\Backgammon\\Backgammon\\Backgammon\\WinPlayer2.png", UriKind.Absolute));
+            if (game.Player1.State && game.Mode == GameMode.playerVsPlayer) resultGame.Background = new ImageBrush(winPlayer2);
+            else if (game.Player2.State) resultGame.Background = new ImageBrush(winPlayer1);
             resultGame.Visibility = Visibility.Visible;
-            control.Visibility = Visibility.Hidden;
             gameField.Visibility = Visibility.Hidden;
+            control.Visibility = Visibility.Hidden;
             game = null;
         }
-
         private void resultGame_MouseDown(object sender, MouseButtonEventArgs e)
         {
             resultGame.Visibility = Visibility.Hidden;
@@ -168,33 +115,22 @@ namespace Backgammon
             mainMenu.Visibility = Visibility.Visible;
 
         }
-
-        private void controlMenu_MouseEnter(object sender, MouseEventArgs e)
+        private void controlText_MouseEnter(object sender, MouseEventArgs e)
         {
-            controlMenu.Foreground = Brushes.White;
+            Label label = (Label)sender;
+            label.Foreground = Brushes.White;
         }
-
-        private void controlMenu_MouseLeave(object sender, MouseEventArgs e)
+        private void controlText_MouseLeave(object sender, MouseEventArgs e)
         {
-            controlMenu.Foreground = new SolidColorBrush(Color.FromRgb(255, 254, 204));
+            Label label = (Label)sender;
+            label.Foreground = new SolidColorBrush(Color.FromRgb(255, 254, 204));
         }
-
-        private void controlSurrender_MouseEnter(object sender, MouseEventArgs e)
-        {
-            controlSurrender.Foreground = Brushes.White;
-        }
-
-        private void controlSurrender_MouseLeave(object sender, MouseEventArgs e)
-        {
-            controlSurrender.Foreground = new SolidColorBrush(Color.FromRgb(255, 254, 204));
-        }
-
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Escape)
             {
-                control.Visibility = Visibility.Hidden;
                 gameField.Visibility = Visibility.Hidden;
+                control.Visibility = Visibility.Hidden;
                 saveGame.Visibility = Visibility.Hidden;
                 loadGame.Visibility = Visibility.Hidden;
                 resultGame.Visibility = Visibility.Hidden;
@@ -202,152 +138,66 @@ namespace Backgammon
                 mainMenu.Visibility = Visibility.Visible;
             }
         }
-
-        private void saveDialog_MouseEnter(object sender, MouseEventArgs e)
-        {
-            saveDialog.FontSize = 52;
-            saveDialog.Foreground = Brushes.White;
-        }
-
-        private void saveDialog_MouseLeave(object sender, MouseEventArgs e)
-        {
-            saveDialog.FontSize = 50;
-            saveDialog.Foreground = new SolidColorBrush(Color.FromRgb(255, 254, 204));
-        }
-
-        private void loadDialog_MouseEnter(object sender, MouseEventArgs e)
-        {
-            loadDialog.FontSize = 52;
-            loadDialog.Foreground = Brushes.White;
-        }
-
-        private void loadDialog_MouseLeave(object sender, MouseEventArgs e)
-        {
-            loadDialog.FontSize = 50;
-            loadDialog.Foreground = new SolidColorBrush(Color.FromRgb(255, 254, 204));
-        }
-
         private void save_MouseDown(object sender, MouseButtonEventArgs e)
         {
             mainMenu.Visibility = Visibility.Hidden;
             saveGame.Visibility = Visibility.Visible;
             saveFileName.Focus();
         }
-
         private void load_MouseDown(object sender, MouseButtonEventArgs e)
         {
             mainMenu.Visibility = Visibility.Hidden;
             loadGame.Visibility = Visibility.Visible;
         }
-
         private void controlDice_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            controlDice.Visibility = Visibility.Hidden;
-            resultDice.Visibility = Visibility.Visible;
             game.GenerateDice();
-            resultDice.Content = game.Dices[0].ToString() + " : " + game.Dices[1].ToString();
+            if (game.Player1.State)
+            {
+                player1Dice.Content = game.Dices[0].ToString() + " : " + game.Dices[1].ToString();
+                player1Dice.Visibility = Visibility.Visible;
+                player2Dice.Visibility = Visibility.Hidden;
+            }
+            else if (game.Player2.State)
+            {
+                player2Dice.Content = game.Dices[0].ToString() + " : " + game.Dices[1].ToString();
+                player2Dice.Visibility = Visibility.Visible;
+                player1Dice.Visibility = Visibility.Hidden;
+            }
         }
-
         private void backToGame_MouseDown(object sender, MouseButtonEventArgs e)
         {
             mainMenu.Visibility = Visibility.Hidden;
-            control.Visibility = Visibility.Visible;
             gameField.Visibility = Visibility.Visible;
+            control.Visibility = Visibility.Visible;
         }
-
-        private void backToGame_MouseEnter(object sender, MouseEventArgs e)
-        {
-            backToGame.FontSize = 52;
-            backToGame.Foreground = Brushes.White;
-        }
-
-        private void backToGame_MouseLeave(object sender, MouseEventArgs e)
-        {
-            backToGame.FontSize = 50;
-            backToGame.Foreground = new SolidColorBrush(Color.FromRgb(255, 254, 204));
-        }
-
         private void yes_MouseDown(object sender, MouseButtonEventArgs e)
         {
             newGame.Visibility = Visibility.Hidden;
             game = new GameController(mode);
-            control.Visibility = Visibility.Visible;
             gameField.Visibility = Visibility.Visible;
             DrawCheckers();
         }
-
-        private void yes_MouseEnter(object sender, MouseEventArgs e)
-        {
-            yes.FontSize = 92;
-            yes.Foreground = Brushes.White;
-        }
-
-        private void yes_MouseLeave(object sender, MouseEventArgs e)
-        {
-            yes.FontSize = 90;
-            yes.Foreground = new SolidColorBrush(Color.FromRgb(255, 254, 204));
-        }
-
         private void no_MouseDown(object sender, MouseButtonEventArgs e)
         {
             newGame.Visibility = Visibility.Hidden;
             mainMenu.Visibility = Visibility.Visible;
         }
-
-        private void no_MouseEnter(object sender, MouseEventArgs e)
-        {
-            no.FontSize = 92;
-            no.Foreground = Brushes.White;
-        }
-
-        private void no_MouseLeave(object sender, MouseEventArgs e)
-        {
-            no.FontSize = 90;
-            no.Foreground = new SolidColorBrush(Color.FromRgb(255, 254, 204));
-        }
-
         private void saveBack_MouseDown(object sender, MouseButtonEventArgs e)
         {
             saveGame.Visibility = Visibility.Hidden;
             mainMenu.Visibility = Visibility.Visible;
         }
-
-        private void saveBack_MouseEnter(object sender, MouseEventArgs e)
-        {
-            saveBack.FontSize = 52;
-            saveBack.Foreground = Brushes.White;
-        }
-
-        private void saveBack_MouseLeave(object sender, MouseEventArgs e)
-        {
-            saveBack.FontSize = 50;
-            saveBack.Foreground = new SolidColorBrush(Color.FromRgb(255, 254, 204));
-        }
-
         private void saveDialog_MouseDown(object sender, MouseButtonEventArgs e)
         {
             XML.Save(saveFileName.Text, game);
             saveBack_MouseDown(null, null);
         }
-
         private void loadBack_MouseDown(object sender, MouseButtonEventArgs e)
         {
             loadGame.Visibility = Visibility.Hidden;
             mainMenu.Visibility = Visibility.Visible;
         }
-
-        private void loadBack_MouseEnter(object sender, MouseEventArgs e)
-        {
-            loadBack.FontSize = 52;
-            loadBack.Foreground = Brushes.White;
-        }
-
-        private void loadBack_MouseLeave(object sender, MouseEventArgs e)
-        {
-            loadBack.FontSize = 50;
-            loadBack.Foreground = new SolidColorBrush(Color.FromRgb(255, 254, 204));
-        }
-
         private void loadDialog_MouseDown(object sender, MouseButtonEventArgs e)
         {
             game = XML.Download(loadFileName.Text);
@@ -355,42 +205,89 @@ namespace Backgammon
         }
         private void DrawCheckers()
         {
+            player1Checkers.Add(lChecker15);
+            player1Checkers.Add(lChecker14);
+            player1Checkers.Add(lChecker13);
+            player1Checkers.Add(lChecker12);
+            player1Checkers.Add(lChecker11);
+            player1Checkers.Add(lChecker10);
+            player1Checkers.Add(lChecker9);
+            player1Checkers.Add(lChecker8);
+            player1Checkers.Add(lChecker7);
+            player1Checkers.Add(lChecker6);
+            player1Checkers.Add(lChecker5);
+            player1Checkers.Add(lChecker4);
+            player1Checkers.Add(lChecker3);
+            player1Checkers.Add(lChecker2);
+            player1Checkers.Add(lChecker1);
+            player2Checkers.Add(rChecker15);
+            player2Checkers.Add(rChecker14);
+            player2Checkers.Add(rChecker13);
+            player2Checkers.Add(rChecker12);
+            player2Checkers.Add(rChecker11);
+            player2Checkers.Add(rChecker10);
+            player2Checkers.Add(rChecker9);
+            player2Checkers.Add(rChecker8);
+            player2Checkers.Add(rChecker7);
+            player2Checkers.Add(rChecker6);
+            player2Checkers.Add(rChecker5);
+            player2Checkers.Add(rChecker4);
+            player2Checkers.Add(rChecker3);
+            player2Checkers.Add(rChecker2);
+            player2Checkers.Add(rChecker1);
             CheckerColor player1Color = game.Player1.Checkers.Color, player2Color = game.Player2.Checkers.Color;
             BitmapImage image1 = new BitmapImage(new Uri(player1Color.ToString().ToLower() + ".PNG", UriKind.Relative));
             BitmapImage image2 = new BitmapImage(new Uri(player2Color.ToString().ToLower() + ".PNG", UriKind.Relative));
             if (player1Color != CheckerColor.Black)
             {
-                lChecker1.Source = image1;
-                lChecker2.Source = image1;
-                lChecker3.Source = image1;
-                lChecker4.Source = image1;
-                lChecker5.Source = image1;
-                lChecker6.Source = image1;
-                lChecker7.Source = image1;
-                lChecker8.Source = image1;
-                lChecker9.Source = image1;
-                lChecker10.Source = image1;
-                lChecker11.Source = image1;
-                lChecker12.Source = image1;
-                lChecker13.Source = image1;
-                lChecker14.Source = image1;
-                lChecker15.Source = image1;
-                rChecker1.Source = image2;
-                rChecker2.Source = image2;
-                rChecker3.Source = image2;
-                rChecker4.Source = image2;
-                rChecker5.Source = image2;
-                rChecker6.Source = image2;
-                rChecker7.Source = image2;
-                rChecker8.Source = image2;
-                rChecker9.Source = image2;
-                rChecker10.Source = image2;
-                rChecker11.Source = image2;
-                rChecker12.Source = image2;
-                rChecker13.Source = image2;
-                rChecker14.Source = image2;
-                rChecker15.Source = image2;
+                for (int i = 0; i < player2Checkers.Count; i++)
+                {
+                    player1Checkers[i].Source = image1;
+                    player2Checkers[i].Source = image2;
+                }
             }
+        }
+        private void Animation(Label label, int size, Color color)
+        {
+            label.FontSize = size;
+            label.Foreground = new SolidColorBrush(color);
+        }
+        private void bigText_MouseEnter(object sender, MouseEventArgs e) => Animation((Label)sender, 52, Color.FromRgb(255, 255, 255));
+        private void smallText_MouseLeave(object sender, MouseEventArgs e) => Animation((Label)sender, 50, Color.FromRgb(255, 254, 204));
+        private void noOrYesText_MouseEnter(object sender, MouseEventArgs e) => Animation((Label)sender, 92, Color.FromRgb(255, 255, 255));
+        private void noOrYesText_MouseLeave(object sender, MouseEventArgs e) => Animation((Label)sender, 90, Color.FromRgb(255, 254, 204));
+        private void selectChecker_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            selectedImage = (Image)sender;
+            border.Width = selectedImage.Width;
+            border.Height = selectedImage.Height;
+            border.BorderBrush = Brushes.White;
+            UIElementCollection collection = gameField.Children;
+            if (!collection.Contains(border))
+                gameField.Children.Add(border);
+            Grid.SetColumn(border, Grid.GetColumn(selectedImage));
+            Grid.SetRow(border, Grid.GetRow(selectedImage));
+            border.Margin = selectedImage.Margin;
+            border.BorderThickness = new Thickness(4);
+        }
+
+        private void gameField_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (selectedImage != null && isFocus)
+            {
+                Point position = e.GetPosition(gameField);
+                ColumnDefinitionCollection columns = gameField.ColumnDefinitions;
+                int oldindex, newIndex, numRow = 1, numColumn;
+                if (position.Y < gameField.Height)
+                    numRow = 2;
+                numColumn = (int)Math.Round(position.X / (columns[2].ActualWidth + columns[3].ActualWidth));
+                if (position.X > gameField.Width / 2) numColumn--;
+                numColumn *= 2;
+                border.BorderThickness = new Thickness(0);
+                //перемещение фишки с помощью GameController
+                isFocus = false;
+            }
+            isFocus = true;
         }
     }
 }
