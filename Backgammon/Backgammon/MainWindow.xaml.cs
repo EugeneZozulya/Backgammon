@@ -5,6 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Threading;
 
 namespace Backgammon
 {
@@ -220,13 +221,20 @@ namespace Backgammon
             CheckerColor player1Color = game.Player1.Checkers.Color, player2Color = game.Player2.Checkers.Color;
             BitmapImage image1 = new BitmapImage(new Uri("Image/" + player1Color.ToString().ToLower() + ".PNG", UriKind.RelativeOrAbsolute));
             BitmapImage image2 = new BitmapImage(new Uri("Image/" + player2Color.ToString().ToLower() + ".PNG", UriKind.RelativeOrAbsolute));
-            if (player1Color != CheckerColor.Black)
+            for (int i = 0; i < player2Checkers.Count; i++)
             {
-                for (int i = 0; i < player2Checkers.Count; i++)
-                {
-                    player1Checkers[i].Source = image1;
-                    player2Checkers[i].Source = image2;
-                }
+                player1Checkers[i].Source = image1;
+                player2Checkers[i].Source = image2;
+                Panel.SetZIndex(player1Checkers[1], 15 - i);
+                Panel.SetZIndex(player2Checkers[1], 15 - i);
+                Grid.SetColumn(player1Checkers[i], 2);
+                Grid.SetRow(player1Checkers[i], 2);
+                Grid.SetColumn(player2Checkers[i], 24);
+                Grid.SetRow(player2Checkers[i], 1);
+                player1Checkers[i].VerticalAlignment = VerticalAlignment.Bottom;
+                player2Checkers[i].VerticalAlignment = VerticalAlignment.Top;
+                player1Checkers[i].Margin = new Thickness(0, 0, 0, 19 * i);
+                player2Checkers[i].Margin = new Thickness(0, 19 * i, 0, 0);
             }
         }
         private void Animation(Label label, int size, Color color)
@@ -246,18 +254,20 @@ namespace Backgammon
             {
                 gameField.Background = Brushes.Transparent;
                 selectedImage = checker;
-                //border.Width = selectedImage.Width;
-                //border.Height = selectedImage.Height;
-                //UIElementCollection collection = gameField.Children;
-                //if (!collection.Contains(border))
-                //{
-                //    gameField.Children.Add(border);
-                //    border.BorderBrush = Brushes.White;
-                //}
-                //Grid.SetColumn(border, Grid.GetColumn(selectedImage));
-                //Grid.SetRow(border, Grid.GetRow(selectedImage));
-                //border.Margin = selectedImage.Margin;
-                //border.BorderThickness = new Thickness(4);
+                border.Width = selectedImage.Width;
+                border.Height = selectedImage.Height;
+                UIElementCollection collection = gameField.Children;
+                if (!collection.Contains(border))
+                {
+                    gameField.Children.Add(border);
+                    border.BorderBrush = Brushes.White;
+                }
+                Grid.SetColumn(border, Grid.GetColumn(selectedImage));
+                Grid.SetRow(border, Grid.GetRow(selectedImage));
+                border.Margin = selectedImage.Margin;
+                border.BorderThickness = new Thickness(4);
+                border.VerticalAlignment = selectedImage.VerticalAlignment;
+                Panel.SetZIndex(border, Panel.GetZIndex(selectedImage));
             }
         }
         private void gameField_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -297,8 +307,7 @@ namespace Backgammon
                 }
                 isFocus = false;
                 gameField.Background = null;
-                if (game.Player2.State && mode == GameMode.playerVsComp) 
-                    ComputerMove();
+                if (game.Player2.State && mode == GameMode.playerVsComp) ComputerMove();
             }
             else if(selectedImage!=null) isFocus = true;
         }
@@ -314,6 +323,7 @@ namespace Backgammon
                 isMove = true;
                 if (game.Dices[0] == 0 && game.Dices[1] == 0 && game.Dices[2] == 0)
                 {
+                    if (!game.CheckedCheckers()) controlSurrender_MouseDown(null, null);
                     game.Player1.State = !game.Player1.State;
                     game.Player2.State = !game.Player2.State;
                 }
@@ -379,11 +389,10 @@ namespace Backgammon
         {
             int newIndex, oldIndex;
             game.GenerateDice();
-            ShowDice();
             Computer computer = (Computer)game.Player2;
             if ((!game.CheckedMove() && game.CheckedSecondHome()) || game.CheckedMove())
             {
-                while (game.Dices[0] != 0 && game.Dices[1] != 0)
+                while (game.Dices[0] != 0 || game.Dices[1] != 0)
                 {
                     (oldIndex, newIndex) = computer.SearchGameTurn(game.Dices, game.gameField, game.CheckedSecondHome());
                     GameTurn(oldIndex, newIndex);
@@ -398,14 +407,12 @@ namespace Backgammon
                             selectedImage = (Image)checkers[i];
                             Grid.SetColumn(selectedImage, newColumn);
                             Grid.SetRow(selectedImage, newRow);
-                            Panel.SetZIndex(selectedImage, game.gameField.Field[newIndex]);
+                            Panel.SetZIndex(selectedImage, -game.gameField.Field[newIndex]);
                             SetMargin(newIndex, newRow);
                             break;
                         }
                     }
                 }
-                if (game.Dices[1] > 0)
-                    game.Dices[0] = 0;
             }
         }
         private (int,int) CalculateRowAndColumn(int index)

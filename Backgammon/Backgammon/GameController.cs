@@ -335,7 +335,7 @@ namespace Backgammon
         /// Checks if the checkers are on the board.
         /// </summary>
         /// <param name="numPlayer"> Player number who takes a game turn. Key '1' - the first player, '2' - the second player. </param>
-        /// <returns> True - win, false - don't win. </returns>
+        /// <returns> False - win, true - don't win. </returns>
         public bool CheckedCheckers()
         {
             bool isFirst = false, isSecond = false, result = false;

@@ -28,7 +28,7 @@
                 if (dice[2] > 1)
                 {
                     step1 = dice[0] + dice[1] + dice3 + dice4 + oldIndex;
-                    if (step1 > gameField.Field.Length) step1 = step1 - gameField.Field.Length;
+                    if (step1 >= gameField.Field.Length) step1 = step1 - gameField.Field.Length;
                     if (gameField.Field[step1] == 0) newIndex = step1;
                 }
                 else if (gameField.Field[step] == 0) newIndex = step;
@@ -39,10 +39,16 @@
             {
                 for (int i = 0; i < gameField.Field.Length; i++) //Find the game move for the checkers.
                 {
-                    oldIndex = i; newIndex = -1;
+                    int step1 = 0, step2 = 0, step3 = 0, step4 = 0;
+                    oldIndex = i;
                     if (dice[2] == 2) dice3 = dice4 = dice[0];
                     else if (dice[2] == 1) dice3 = dice[0];
-                    int step1 = i + dice[0], step2 = i + dice[1], step3 = i + dice[0] + dice[1], step4 = i + dice[0] + dice[1] + dice3 + dice4;
+                    if (dice[0] != 0) step1 = i + dice[0];
+                    if (dice[1] != 0) step2 = i + dice[1];
+                    if (dice[0] != 0 && dice[1] != 0) {
+                        step3 = i + dice[0] + dice[1];
+                        step4 = i + dice[0] + dice[1] + dice3 + dice4;
+                    }
                     if (gameField.Field[i] < 0)
                     {
                         if (i < gameField.Field.Length / 2-1) //First, find the game move for the checkers, which are in cells 0 through 11.
