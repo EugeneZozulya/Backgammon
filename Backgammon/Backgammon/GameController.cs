@@ -207,7 +207,7 @@ namespace Backgammon
         /// <returns> True - he can, false - he can't. </returns>
         public bool CheckedMove()
         {
-            bool isPossible = false, player1Moves = false, player2Moves = false, isTwoPart = false;
+            bool isPossible = false, player1Moves = false, player2Moves = false;
             int dice3 = 0, dice4 = 0;
             char numPlayer = '1';
             if (Player2.State) numPlayer = '2';

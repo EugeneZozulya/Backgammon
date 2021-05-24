@@ -51,6 +51,7 @@ namespace Backgammon
             }
             mainMenu.Visibility = Visibility.Hidden;
             lPlayer2.Content = "Player2";
+            homePlayer2.Content = "Дом Player2";
         }
         /// <summary>
         /// MouseDown event of the label "Сдаться".
@@ -81,7 +82,9 @@ namespace Backgammon
                 DrawCheckers();
             }
             lPlayer2.Content = "Computer";
+            homePlayer2.Content = "Дом Computer";
             mainMenu.Visibility = Visibility.Hidden;
+            if (game.Player2.State) ComputerMove();
         }
         private void controlSurrender_MouseDown(object sender, MouseButtonEventArgs e)
         {
@@ -280,7 +283,7 @@ namespace Backgammon
                 }
                 else numColumn *= 2;
                 border.BorderThickness = new Thickness(0);
-                if (GameTurn(oldindex, newIndex))
+                if ((game.CheckedMove() || newIndex == -1) && GameTurn(oldindex, newIndex))
                 {
                     if(newIndex!=-1)
                     {
@@ -294,31 +297,24 @@ namespace Backgammon
                 }
                 isFocus = false;
                 gameField.Background = null;
+                if (game.Player2.State && mode == GameMode.playerVsComp) ComputerMove();
             }
             else if(selectedImage!=null) isFocus = true;
         }
-        //private void gameField_MouseEnter(object sender, MouseEventArgs e)
-        //{
-        //    if (selectedImage != null) Backgammon.Cursor = Cursors.Hand;
-        //    else Backgammon.Cursor = Cursors.Arrow;
-        //}
         private bool GameTurn(int oldIndex, int newIndex)
         {
             int countCheckers = 0;
             if(newIndex>=0 ) countCheckers = game.gameField.Field[newIndex];
             bool isMove = false;
-            if (game.CheckedMove() || newIndex == -1)
+            game.TakeGameTurn(oldIndex, newIndex);
+            if (newIndex== -1 || (game.Player1.State && countCheckers < game.gameField.Field[newIndex]) || (game.Player2.State && countCheckers > game.gameField.Field[newIndex]))
             {
-                game.TakeGameTurn(oldIndex, newIndex);
-                if (newIndex== -1 || (game.Player1.State && countCheckers < game.gameField.Field[newIndex]) || (game.Player2.State && countCheckers > game.gameField.Field[newIndex]))
+                isMove = true;
+                ShowDice();
+                if (game.Dices[0] == 0 && game.Dices[1] == 0 && game.Dices[2] == 0)
                 {
-                    isMove = true;
-                    ShowDice();
-                    if (game.Dices[0] == 0 && game.Dices[1] == 0 && game.Dices[2] == 0)
-                    {
-                        game.Player1.State = !game.Player1.State;
-                        game.Player2.State = !game.Player2.State;
-                    }
+                    game.Player1.State = !game.Player1.State;
+                    game.Player2.State = !game.Player2.State;
                 }
             }
             return isMove;
@@ -379,6 +375,40 @@ namespace Backgammon
                     selectedImage.VerticalAlignment = VerticalAlignment.Top;
                 }
             }
+        }
+        private void ComputerMove()
+        {
+            int newIndex, oldIndex;
+            game.GenerateDice();
+            ShowDice();
+            Computer computer = (Computer)game.Player2;
+            if (!game.CheckedMove() && game.CheckedSecondHome())
+            {
+                (oldIndex, newIndex) = computer.SearchGameTurn(game.Dices, game.gameField, game.CheckedSecondHome());
+                GameTurn(oldIndex, newIndex);
+                int oldRow, oldColumn, newRow, newColumn;
+                (oldRow, oldColumn) = CalculateRowAndColumn(oldIndex);
+                (newRow, newColumn) = CalculateRowAndColumn(oldIndex);
+                UIElementCollection checkers = gameField.Children;
+                for(int i = 0; i<checkers.Count; i++)
+                {
+                    if (Grid.GetColumn(checkers[i]) == oldColumn && Panel.GetZIndex(checkers[i]) == (-game.gameField.Field[oldIndex]))
+                    {
+                        Grid.SetColumn(checkers[i], newColumn);
+                        Grid.SetRow(checkers[i], newRow);
+                        Panel.SetZIndex(checkers[i], game.gameField.Field[newIndex]);
+                    }
+                }
+            }
+        }
+        private (int,int) CalculateRowAndColumn(int index)
+        {
+            int row = 2, column;
+            if (index > 11) row = 1;
+            if (index < 12) index++;
+            else if (index > 12) index--;
+            column = index * 2;
+            return (row, column);
         }
     }
 }
