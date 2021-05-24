@@ -184,9 +184,10 @@ namespace Backgammon
         }
         private void loadOrSave_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            XML xmlManage = new XML();
             if(loadingOrSaving.Content.ToString() == "Сохранить игру")
-                XML.Save(fileName.Text, game);
-            else game = XML.Download(fileName.Text);
+                xmlManage.Save(fileName.Text, game);
+            else game = xmlManage.Download(fileName.Text);
             back_MouseDown(null, null);
         }
         private void DrawCheckers()
