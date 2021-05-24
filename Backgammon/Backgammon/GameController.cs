@@ -231,33 +231,13 @@ namespace Backgammon
                 }
                 else if (gameField.Field[i] < 0)
                 {
-                    if (step > gameField.Field.Length-1)
-                    {
-                        step = step - gameField.Field.Length;
-                        isTwoPart = true;
-                    }
-                    if (step1 > gameField.Field.Length-1)
-                    {
-                        step1 = step1 - gameField.Field.Length;
-                        isTwoPart = true;
-                    }
-                    if (step2 > gameField.Field.Length-1)
-                    {
-                        step2 = step2 - gameField.Field.Length;
-                        isTwoPart = true;
-                    }
-                    if (step3 > gameField.Field.Length-1)
-                    {
-                        step3 = step3 - gameField.Field.Length;
-                        isTwoPart = true;
-                    }
-                    if (step4 > gameField.Field.Length-1)
-                    {
-                        step4 = step4 - gameField.Field.Length;
-                        isTwoPart = true;
-                    }
-                    if ((isTwoPart && ((step < gameField.Field.Length / 2 && gameField.Field[step] <= 0) || (step1 < gameField.Field.Length / 2 && gameField.Field[step1] <= 0) || (step2 < gameField.Field.Length / 2 && gameField.Field[step2] <= 0) || (step3 < gameField.Field.Length / 2 && gameField.Field[step3] <= 0) || (step4 < gameField.Field.Length / 2 && gameField.Field[step4] <= 0)))
-                        || (!isTwoPart && ((gameField.Field[step] <= 0) || (gameField.Field[step1] <= 0) || (gameField.Field[step2] <= 0) || (gameField.Field[step3] <= 0) || (gameField.Field[step4] <= 0))))
+                    if (step > gameField.Field.Length-1) step = step - gameField.Field.Length;
+                    if (step1 > gameField.Field.Length-1) step1 = step1 - gameField.Field.Length;
+                    if (step2 > gameField.Field.Length-1) step2 = step2 - gameField.Field.Length;
+                    if (step3 > gameField.Field.Length-1) step3 = step3 - gameField.Field.Length;
+                    if (step4 > gameField.Field.Length-1) step4 = step4 - gameField.Field.Length;
+                    if ((step < gameField.Field.Length / 2 && gameField.Field[step] <= 0) || (step1 < gameField.Field.Length / 2 && gameField.Field[step1] <= 0) || (step2 < gameField.Field.Length / 2 && gameField.Field[step2] <= 0) || (step3 < gameField.Field.Length / 2 && gameField.Field[step3] <= 0) || (step4 < gameField.Field.Length / 2 && gameField.Field[step4] <= 0)
+                        || (gameField.Field[step] <= 0) || (gameField.Field[step1] <= 0) || (gameField.Field[step2] <= 0) || (gameField.Field[step3] <= 0) || (gameField.Field[step4] <= 0))
                         player2Moves = true;
                 }
             }
@@ -314,14 +294,15 @@ namespace Backgammon
                     gameField.Field[oldIndex] -= flag;
                     gameField.Field[newIndex] += flag;
                     Dices[0] = Dices[1] = Dices[2] = 0;
+                    return;
                 }
                 else if (step4 == newIndex)
                 {
                     gameField.Field[oldIndex] -= flag;
                     gameField.Field[newIndex] += flag;
                     Dices[1] = Dices[2] = 0;
+                    return;
                 }
-                return;
             }
             if (step3 == newIndex)
             {

@@ -45,10 +45,6 @@ namespace Backgammon
             else
             {
                 game = new GameController(mode);
-                game.Dices[0] = game.Dices[1] = 3;
-                game.Dices[2] = 2;
-                game.Player1.State = false;
-                game.Player2.State = true;
                 control.Visibility = Visibility.Visible;
                 gameField.Visibility = Visibility.Visible;
                 DrawCheckers();
@@ -145,6 +141,7 @@ namespace Backgammon
         }
         private void controlDice_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            if (game.Dices[0] != 0 || game.Dices[1] != 0) return;
             game.GenerateDice();
             ShowDice();
         }
@@ -289,6 +286,8 @@ namespace Backgammon
                     {
                         Grid.SetRow(selectedImage, numRow);
                         Grid.SetColumn(selectedImage, numColumn);
+                        if (game.gameField.Field[newIndex] < 0) Panel.SetZIndex(selectedImage, 0 - game.gameField.Field[newIndex]);
+                        else Panel.SetZIndex(selectedImage, 0 + game.gameField.Field[newIndex]);
                     }
                     if (newIndex == -1) TakeAwayCheckers(oldindex);
                     else SetMargin(newIndex, numRow);
@@ -346,26 +345,39 @@ namespace Backgammon
                 Grid.SetRow(selectedImage, 2);
                 Grid.SetColumn(selectedImage, 27);
                 selectedImage.Margin = new Thickness(0, 0, 0, 10 * -(game.gameField.Field[oldindex] - 14));
+                selectedImage.VerticalAlignment = VerticalAlignment.Bottom;
+                Panel.SetZIndex(selectedImage, 15 - game.gameField.Field[oldindex]);
             }
             else if (oldindex > 5 && oldindex < 12)
             {
                 Grid.SetRow(selectedImage, 1);
                 Grid.SetColumn(selectedImage, 27);
                 selectedImage.Margin = new Thickness(0, 10 * (game.gameField.Field[oldindex] + 14), 0, 0);
+                selectedImage.VerticalAlignment = VerticalAlignment.Top;
+                Panel.SetZIndex(selectedImage, 15 + game.gameField.Field[oldindex]);
             }
         }
         private void SetMargin(int newIndex, int numRow)
         {
+            RowDefinitionCollection rows = gameField.RowDefinitions;
+            double height = rows[numRow].ActualHeight;
             if (game.gameField.Field[newIndex] < 0)
             {
-                if (numRow == 2) selectedImage.Margin = new Thickness(0, 0, 0, 19 * -(game.gameField.Field[newIndex] + 1));
+                if (numRow == 2)
+                {
+                    selectedImage.Margin = new Thickness(0, 0, 0, 19 * -(game.gameField.Field[newIndex] + 1));
+                    selectedImage.VerticalAlignment = VerticalAlignment.Bottom;
+                }
                 else selectedImage.Margin = new Thickness(0, 19 * -(game.gameField.Field[newIndex] + 1), 0, 0);
             }
             else if (game.gameField.Field[newIndex] > 0)
             {
                 if (numRow == 2) selectedImage.Margin = new Thickness(0, 0, 0, 19 * (game.gameField.Field[newIndex] - 1));
                 else
+                {
                     selectedImage.Margin = new Thickness(0, 19 * (game.gameField.Field[newIndex] - 1), 0, 0);
+                    selectedImage.VerticalAlignment = VerticalAlignment.Top;
+                }
             }
         }
     }
