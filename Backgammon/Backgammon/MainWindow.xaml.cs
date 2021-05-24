@@ -72,7 +72,7 @@ namespace Backgammon
         /// <param name="e"> Object of MouseButtonEventArgs class. </param>
         private void playerVsComp_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            mode = GameMode.playerVsPlayer;
+            mode = GameMode.playerVsComp;
             if (game != null) newGame.Visibility = Visibility.Visible;
             else
             {
@@ -297,7 +297,8 @@ namespace Backgammon
                 }
                 isFocus = false;
                 gameField.Background = null;
-                if (game.Player2.State && mode == GameMode.playerVsComp) ComputerMove();
+                if (game.Player2.State && mode == GameMode.playerVsComp) 
+                    ComputerMove();
             }
             else if(selectedImage!=null) isFocus = true;
         }
@@ -309,8 +310,8 @@ namespace Backgammon
             game.TakeGameTurn(oldIndex, newIndex);
             if (newIndex== -1 || (game.Player1.State && countCheckers < game.gameField.Field[newIndex]) || (game.Player2.State && countCheckers > game.gameField.Field[newIndex]))
             {
-                isMove = true;
                 ShowDice();
+                isMove = true;
                 if (game.Dices[0] == 0 && game.Dices[1] == 0 && game.Dices[2] == 0)
                 {
                     game.Player1.State = !game.Player1.State;
@@ -355,8 +356,6 @@ namespace Backgammon
         }
         private void SetMargin(int newIndex, int numRow)
         {
-            RowDefinitionCollection rows = gameField.RowDefinitions;
-            double height = rows[numRow].ActualHeight;
             if (game.gameField.Field[newIndex] < 0)
             {
                 if (numRow == 2)
@@ -382,23 +381,31 @@ namespace Backgammon
             game.GenerateDice();
             ShowDice();
             Computer computer = (Computer)game.Player2;
-            if (!game.CheckedMove() && game.CheckedSecondHome())
+            if ((!game.CheckedMove() && game.CheckedSecondHome()) || game.CheckedMove())
             {
-                (oldIndex, newIndex) = computer.SearchGameTurn(game.Dices, game.gameField, game.CheckedSecondHome());
-                GameTurn(oldIndex, newIndex);
-                int oldRow, oldColumn, newRow, newColumn;
-                (oldRow, oldColumn) = CalculateRowAndColumn(oldIndex);
-                (newRow, newColumn) = CalculateRowAndColumn(oldIndex);
-                UIElementCollection checkers = gameField.Children;
-                for(int i = 0; i<checkers.Count; i++)
+                while (game.Dices[0] != 0 && game.Dices[1] != 0)
                 {
-                    if (Grid.GetColumn(checkers[i]) == oldColumn && Panel.GetZIndex(checkers[i]) == (-game.gameField.Field[oldIndex]))
+                    (oldIndex, newIndex) = computer.SearchGameTurn(game.Dices, game.gameField, game.CheckedSecondHome());
+                    GameTurn(oldIndex, newIndex);
+                    int oldRow, oldColumn, newRow, newColumn;
+                    (oldRow, oldColumn) = CalculateRowAndColumn(oldIndex);
+                    (newRow, newColumn) = CalculateRowAndColumn(newIndex);
+                    UIElementCollection checkers = gameField.Children;
+                    for (int i = 0; i < checkers.Count; i++)
                     {
-                        Grid.SetColumn(checkers[i], newColumn);
-                        Grid.SetRow(checkers[i], newRow);
-                        Panel.SetZIndex(checkers[i], game.gameField.Field[newIndex]);
+                        if (Grid.GetColumn(checkers[i]) == oldColumn && Grid.GetRow(checkers[i]) == oldRow && Panel.GetZIndex(checkers[i]) == (-(game.gameField.Field[oldIndex] - 1)))
+                        {
+                            selectedImage = (Image)checkers[i];
+                            Grid.SetColumn(selectedImage, newColumn);
+                            Grid.SetRow(selectedImage, newRow);
+                            Panel.SetZIndex(selectedImage, game.gameField.Field[newIndex]);
+                            SetMargin(newIndex, newRow);
+                            break;
+                        }
                     }
                 }
+                if (game.Dices[1] > 0)
+                    game.Dices[0] = 0;
             }
         }
         private (int,int) CalculateRowAndColumn(int index)
@@ -406,7 +413,7 @@ namespace Backgammon
             int row = 2, column;
             if (index > 11) row = 1;
             if (index < 12) index++;
-            else if (index > 12) index--;
+            else if (index > 12) index = 24 - index;
             column = index * 2;
             return (row, column);
         }
