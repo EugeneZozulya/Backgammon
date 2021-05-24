@@ -32,7 +32,7 @@ namespace Backgammon
         public GameController(GameMode mode)
         {
             Mode = mode;
-            Dices = new int[3];
+            Dices = new int[5];
             gameField = new GameField();
             Player1 = new Player();
             if (mode == GameMode.playerVsComp)
@@ -59,6 +59,8 @@ namespace Backgammon
                 Dices[i] = rnd.Next(1, 6);
             if (Dices[0] == Dices[1]) Dices[2] = 2;
             else Dices[2] = 0;
+            Dices[3] = Dices[0];
+            Dices[4] = Dices[1];
         }
         /// <summary>
         /// Determines who moves first and the color of each player's checkers.

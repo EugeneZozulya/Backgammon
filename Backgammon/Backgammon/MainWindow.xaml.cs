@@ -5,7 +5,6 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Threading;
 
 namespace Backgammon
 {
@@ -85,7 +84,7 @@ namespace Backgammon
             lPlayer2.Content = "Computer";
             homePlayer2.Content = "Дом Computer";
             mainMenu.Visibility = Visibility.Hidden;
-            if (game.Player2.State) ComputerMove();
+            if (game.Player2.State && game.Player2 is Computer) ComputerMove();
         }
         private void controlSurrender_MouseDown(object sender, MouseButtonEventArgs e)
         {
@@ -145,6 +144,12 @@ namespace Backgammon
         }
         private void controlDice_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            if(mode == GameMode.playerVsComp && game.Player2.State)
+            {
+                game.Player1.State = !game.Player1.State;
+                game.Player2.State = !game.Player2.State;
+                game.Dices[0] = game.Dices[1] = 0;
+            }
             if (game.Dices[0] != 0 || game.Dices[1] != 0) return;
             game.GenerateDice();
             ShowDice();
@@ -161,7 +166,10 @@ namespace Backgammon
             game = new GameController(mode);
             gameField.Visibility = Visibility.Visible;
             control.Visibility = Visibility.Visible;
+            player1Dice.Visibility = Visibility.Hidden;
+            player2Dice.Visibility = Visibility.Hidden;
             DrawCheckers();
+            if (mode == GameMode.playerVsComp && game.Player2.State) ComputerMove();
         }
         private void no_MouseDown(object sender, MouseButtonEventArgs e)
         {
@@ -183,58 +191,42 @@ namespace Backgammon
         }
         private void DrawCheckers()
         {
-            if (player1Checkers == null && player2Checkers == null)
-            {
-                player1Checkers = new List<Image>();
-                player2Checkers = new List<Image>();
-                player1Checkers.Add(lChecker15);
-                player1Checkers.Add(lChecker14);
-                player1Checkers.Add(lChecker13);
-                player1Checkers.Add(lChecker12);
-                player1Checkers.Add(lChecker11);
-                player1Checkers.Add(lChecker10);
-                player1Checkers.Add(lChecker9);
-                player1Checkers.Add(lChecker8);
-                player1Checkers.Add(lChecker7);
-                player1Checkers.Add(lChecker6);
-                player1Checkers.Add(lChecker5);
-                player1Checkers.Add(lChecker4);
-                player1Checkers.Add(lChecker3);
-                player1Checkers.Add(lChecker2);
-                player1Checkers.Add(lChecker1);
-                player2Checkers.Add(rChecker15);
-                player2Checkers.Add(rChecker14);
-                player2Checkers.Add(rChecker13);
-                player2Checkers.Add(rChecker12);
-                player2Checkers.Add(rChecker11);
-                player2Checkers.Add(rChecker10);
-                player2Checkers.Add(rChecker9);
-                player2Checkers.Add(rChecker8);
-                player2Checkers.Add(rChecker7);
-                player2Checkers.Add(rChecker6);
-                player2Checkers.Add(rChecker5);
-                player2Checkers.Add(rChecker4);
-                player2Checkers.Add(rChecker3);
-                player2Checkers.Add(rChecker2);
-                player2Checkers.Add(rChecker1);
-            }
+            gameField.Children.Clear();
+            player1Checkers = new List<Image>();
+            player2Checkers = new List<Image>();
             CheckerColor player1Color = game.Player1.Checkers.Color, player2Color = game.Player2.Checkers.Color;
             BitmapImage image1 = new BitmapImage(new Uri("Image/" + player1Color.ToString().ToLower() + ".PNG", UriKind.RelativeOrAbsolute));
             BitmapImage image2 = new BitmapImage(new Uri("Image/" + player2Color.ToString().ToLower() + ".PNG", UriKind.RelativeOrAbsolute));
-            for (int i = 0; i < player2Checkers.Count; i++)
+            for (int i = 0; i < 30; i++)
             {
-                player1Checkers[i].Source = image1;
-                player2Checkers[i].Source = image2;
-                Panel.SetZIndex(player1Checkers[1], 15 - i);
-                Panel.SetZIndex(player2Checkers[1], 15 - i);
-                Grid.SetColumn(player1Checkers[i], 2);
-                Grid.SetRow(player1Checkers[i], 2);
-                Grid.SetColumn(player2Checkers[i], 24);
-                Grid.SetRow(player2Checkers[i], 1);
-                player1Checkers[i].VerticalAlignment = VerticalAlignment.Bottom;
-                player2Checkers[i].VerticalAlignment = VerticalAlignment.Top;
-                player1Checkers[i].Margin = new Thickness(0, 0, 0, 19 * i);
-                player2Checkers[i].Margin = new Thickness(0, 19 * i, 0, 0);
+                Image image = new Image();
+                image.Width = Checker.Width;
+                image.Height = Checker.Height;
+                gameField.Children.Add(image);
+                image.MouseLeftButtonDown += selectChecker_MouseLeftButtonDown;
+                image.HorizontalAlignment = HorizontalAlignment.Center;
+                if (i < 15)
+                {
+                    image.Name = "lChecker" + i.ToString();
+                    image.Source = image1;
+                    Panel.SetZIndex(image, i);
+                    Grid.SetColumn(image, 2);
+                    Grid.SetRow(image, 2);
+                    image.VerticalAlignment = VerticalAlignment.Bottom;
+                    image.Margin = new Thickness(0, 0, 0, 19 * i);
+                    player1Checkers.Add(image);
+                }
+                else
+                {
+                    image.Name = "rChecker" + (i-15).ToString();
+                    image.Source = image2;
+                    Panel.SetZIndex(image, i-15);
+                    Grid.SetColumn(image, 24);
+                    Grid.SetRow(image, 1);
+                    image.VerticalAlignment = VerticalAlignment.Top;
+                    image.Margin = new Thickness(0, 19 * (i-15), 0, 0);
+                    player2Checkers.Add(image);
+                }
             }
         }
         private void Animation(Label label, int size, Color color)
@@ -324,8 +316,11 @@ namespace Backgammon
                 if (game.Dices[0] == 0 && game.Dices[1] == 0 && game.Dices[2] == 0)
                 {
                     if (!game.CheckedCheckers()) controlSurrender_MouseDown(null, null);
-                    game.Player1.State = !game.Player1.State;
-                    game.Player2.State = !game.Player2.State;
+                    if (mode == GameMode.playerVsPlayer || game.Player1.State)
+                    {
+                        game.Player1.State = !game.Player1.State;
+                        game.Player2.State = !game.Player2.State;
+                    }
                 }
             }
             return isMove;
@@ -395,15 +390,16 @@ namespace Backgammon
                 while (game.Dices[0] != 0 || game.Dices[1] != 0)
                 {
                     (oldIndex, newIndex) = computer.SearchGameTurn(game.Dices, game.gameField, game.CheckedSecondHome());
+                    if (newIndex == -2) break;
                     GameTurn(oldIndex, newIndex);
                     int oldRow, oldColumn, newRow, newColumn;
                     (oldRow, oldColumn) = CalculateRowAndColumn(oldIndex);
                     (newRow, newColumn) = CalculateRowAndColumn(newIndex);
                     UIElementCollection checkers = gameField.Children;
-                    for (int i = 0; i < checkers.Count; i++)
+                    for (int i = checkers.Count-1; i >= 0; i--)
                     {
-                        if (Grid.GetColumn(checkers[i]) == oldColumn && Grid.GetRow(checkers[i]) == oldRow && Panel.GetZIndex(checkers[i]) == (-(game.gameField.Field[oldIndex] - 1)))
-                        {
+                        if (Grid.GetColumn(checkers[i]) == oldColumn && Grid.GetRow(checkers[i]) == oldRow) //&& Panel.GetZIndex(checkers[i]) == (-(game.gameField.Field[oldIndex] - 1))
+                        { 
                             selectedImage = (Image)checkers[i];
                             Grid.SetColumn(selectedImage, newColumn);
                             Grid.SetRow(selectedImage, newRow);
@@ -414,6 +410,9 @@ namespace Backgammon
                     }
                 }
             }
+            game.Dices[0] = game.Dices[3];
+            game.Dices[1] = game.Dices[4];
+            ShowDice();
         }
         private (int,int) CalculateRowAndColumn(int index)
         {

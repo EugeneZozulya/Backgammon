@@ -60,10 +60,10 @@
                         }
                         else if(i >= gameField.Field.Length / 2)//Second, find the game move for the checkers, which are in cells 12 through 23.
                         {
-                            if (step1 > gameField.Field.Length) step1 = step1 - gameField.Field.Length;
-                            if (step2 > gameField.Field.Length) step2 = step2 - gameField.Field.Length;
-                            if (step3 > gameField.Field.Length) step3 = step3 - gameField.Field.Length;
-                            if (step4 > gameField.Field.Length) step4 = step4 - gameField.Field.Length;
+                            if (step1 >= gameField.Field.Length) step1 = step1 - gameField.Field.Length;
+                            if (step2 >= gameField.Field.Length) step2 = step2 - gameField.Field.Length;
+                            if (step3 >= gameField.Field.Length) step3 = step3 - gameField.Field.Length;
+                            if (step4 >= gameField.Field.Length) step4 = step4 - gameField.Field.Length;
                             if (gameField.Field[step4] <= 0) newIndex = step4;
                             else if (gameField.Field[step3] <= 0) newIndex = step3;
                             else if (gameField.Field[step1] <= 0) newIndex = step1;
