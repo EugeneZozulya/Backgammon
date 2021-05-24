@@ -2,6 +2,8 @@
 using System.Xml.Serialization;
 using System.Xml;
 using System.Text;
+using System.Collections.Generic;
+using System;
 
 namespace Backgammon
 {
@@ -96,16 +98,54 @@ namespace Backgammon
         public GameController Download(string fileName)
         {
             GameController game = null;
-            if (Directory.Exists("Saves"))
+            if (!Directory.Exists("Saves")) Directory.CreateDirectory("Saves");
+            if (File.Exists(Path.GetFullPath("Saves") + "\\" + fileName + ".xml"))
             {
-                XmlSerializer xmlSerializer = new XmlSerializer(typeof(GameController));
-                using (FileStream stream = new FileStream(@"Saves\" + fileName, FileMode.Create))
-                {
-                    game = (GameController)xmlSerializer.Deserialize(stream);
-                }
+                game = new GameController();
+                XmlDocument document = new XmlDocument();
+                document.Load(Path.GetFullPath("Saves") + "\\" + fileName + ".xml");
+                XmlElement root = document.DocumentElement;
+                XmlNodeList nodeList = root.ChildNodes;
+                //load Dices
+                List<int> dices = new List<int>();
+                XmlElement dice = (XmlElement)nodeList[0];
+                foreach (XmlNode node in dice)
+                    dices.Add(int.Parse(node.InnerText));
+                game.Dices = dices.ToArray();
+                //load Mode
+                XmlNode mode = nodeList[1];
+                game.Mode = (GameMode)Enum.Parse(typeof(GameMode), mode.InnerText);
+                //load Player1
+                game.Player1 = new Player();
+                ReadPlayers(nodeList[2], game.Player1);
+                //load Player2
+                if (game.Mode == GameMode.playerVsComp) game.Player2 = new Computer();
+                else game.Player2 = new Player();
+                ReadPlayers(nodeList[3], game.Player2);
+                //load gameField
+                List<int> field = new List<int>();
+                XmlElement fld = (XmlElement)nodeList[4].FirstChild;
+                foreach (XmlNode node in fld)
+                    field.Add(int.Parse(node.InnerText));
+                game.gameField = new GameField();
+                game.gameField.Field = field.ToArray();
             }
             return game;
         } 
+        /// <summary>
+        /// Read players from xml file.
+        /// </summary>
+        /// <param name="node"> Node of the xml document. </param>
+        /// <param name="player"> Player. </param>
+        void ReadPlayers(XmlNode node, Player player)
+        {
+            XmlNodeList nodeList = node.ChildNodes;
+            XmlNode state = nodeList[0];
+            player.State = Convert.ToBoolean(state.InnerText);
+            XmlNode checker = nodeList[1].FirstChild;
+            player.Checkers.Color = (CheckerColor)Enum.Parse(typeof(CheckerColor), checker.InnerText);
+
+        }
         /// <summary>
         /// Search save game on the computer.
         /// </summary>

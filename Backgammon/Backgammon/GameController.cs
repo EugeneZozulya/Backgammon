@@ -12,11 +12,11 @@ namespace Backgammon
         /// <summary>
         /// Game field.
         /// </summary>
-        public GameField gameField { get; }
+        public GameField gameField { get; set; }
         /// <summary>
         /// The first player.
         /// </summary>
-        public Player Player1 { get; }
+        public Player Player1 { get; set; }
         /// <summary>
         /// The second player.
         /// </summary>
@@ -24,7 +24,7 @@ namespace Backgammon
         /// <summary>
         /// Game mode.
         /// </summary>
-        public GameMode Mode { get; }
+        public GameMode Mode { get; set; }
         /// <summary>
         /// Constructor with parametrs.
         /// </summary>
