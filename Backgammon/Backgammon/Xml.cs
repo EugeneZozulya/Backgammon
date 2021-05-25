@@ -152,7 +152,7 @@ namespace Backgammon
         /// <returns> Files name and files info. </returns>
         public (string[], string[]) SearchSave()
         {
-            string[] filesName = Directory.GetFiles("Saves");
+            string[] filesName = Directory.GetFiles(Path.GetFullPath("Saves"));
             string[] filesInfo = new string[filesName.Length];
             for(int i = 0; i<filesName.Length; i++)
             {

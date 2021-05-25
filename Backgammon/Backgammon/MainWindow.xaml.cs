@@ -20,6 +20,7 @@ namespace Backgammon
         List<Image> player2Checkers;
         bool isFocus = false;
         Border border = new Border();
+        XML xmlManage = new XML();
         public MainWindow()
         {
             InitializeComponent();
@@ -133,6 +134,7 @@ namespace Backgammon
             saveOrDownload.Visibility = Visibility.Visible;
             dialog.Visibility = Visibility.Visible;
             loadingOrSaving.Content = "Сохранить игру";
+            ShowFileInfo();
             fileName.Focus();
         }
         private void load_MouseDown(object sender, MouseButtonEventArgs e)
@@ -141,6 +143,8 @@ namespace Backgammon
             saveOrDownload.Visibility = Visibility.Visible;
             dialog.Visibility = Visibility.Visible;
             loadingOrSaving.Content = "Загрузить игру";
+            ShowFileInfo();
+            fileName.IsEnabled = false;
         }
         private void controlDice_MouseDown(object sender, MouseButtonEventArgs e)
         {
@@ -184,7 +188,6 @@ namespace Backgammon
         }
         private void loadOrSave_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            XML xmlManage = new XML();
             if(loadingOrSaving.Content.ToString() == "Сохранить игру")
                 xmlManage.Save(fileName.Text, game);
             else game = xmlManage.Download(fileName.Text);
@@ -415,6 +418,17 @@ namespace Backgammon
             game.Dices[1] = game.Dices[4];
             ShowDice();
         }
+        private void ShowFileInfo()
+        {
+            string[] fileNames, fileInfo;
+            (fileNames, fileInfo) = xmlManage.SearchSave();
+            for(int i = 0; i < fileNames.Length; i++)
+            {
+                int index = fileNames[i].LastIndexOf('\\') + 1;
+                string name = fileNames[i].Substring(index, fileNames[i].Length  - index);
+                listDialog.Items.Add(name + "    Дата создания: " + fileInfo[i]);
+            }
+        }
         private (int,int) CalculateRowAndColumn(int index)
         {
             int row = 2, column;
@@ -423,6 +437,16 @@ namespace Backgammon
             else if (index > 12) index = 24 - index;
             column = index * 2;
             return (row, column);
+        }
+
+        private void listDialog_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            System.Collections.IList collection = e.AddedItems;
+            string name = (string)collection[0], flName;
+            int index = name.LastIndexOf(".xml");
+            index = index + 4;
+            flName = name.Substring(0, index);
+            fileName.Text = flName;
         }
     }
 }

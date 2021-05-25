@@ -44,15 +44,15 @@
         </Grid>
         <Grid x:Name="mainMenu" HorizontalAlignment="Center" Height="{DynamicResource {x:Static SystemParameters.PrimaryScreenHeightKey}}" VerticalAlignment="Center" Width="{DynamicResource {x:Static SystemParameters.PrimaryScreenWidthKey}}" Background="#FF8E3103" Opacity="0.9">
             <Grid.RowDefinitions>
-                <RowDefinition Height="133*"/>
+                <RowDefinition Height="126*"/>
                 <RowDefinition Height="84*"/>
-                <RowDefinition Height="86*"/>
-                <RowDefinition Height="86*"/>
+                <RowDefinition Height="87*"/>
                 <RowDefinition Height="84*"/>
-                <RowDefinition Height="86*"/>
-                <RowDefinition Height="84*"/>
-                <RowDefinition Height="142*"/>
-                <RowDefinition Height="29*"/>
+                <RowDefinition Height="89*"/>
+                <RowDefinition Height="85*"/>
+                <RowDefinition Height="83*"/>
+                <RowDefinition Height="102*"/>
+                <RowDefinition Height="28*"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="27*"/>
@@ -62,12 +62,12 @@
                 <ColumnDefinition Width="434*"/>
             </Grid.ColumnDefinitions>
             <Label x:Name="info" Content="Backgammon v1.0" Foreground="#FFFFFFCC"  FontFamily="/Backgammon;component/Font/#mr_DopestyleG" FontSize="16" Grid.Column="1" HorizontalAlignment="Center" Grid.Row="8" VerticalAlignment="Center" Height="28" Width="130" Margin="2,2,2,-2" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Padding="5,1,5,5"/>
-            <Label x:Name="backToGame" Content="Вернуться в игру" FontFamily="/Backgammon;component/Font/#mr_DopestyleG" FontSize="50" Foreground="#FFFFFFCC" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center" Height="79" Width="462" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="5,0,5,5" Cursor="Hand" MouseEnter="bigText_MouseEnter" MouseDown="backToGame_MouseDown" MouseLeave="smallText_MouseLeave" Grid.Row="1" Visibility="Hidden"/>
-            <Label x:Name="playerVsPlayer" Content="Игрок vs Игрок" FontFamily="/Backgammon;component/Font/#mr_DopestyleG" FontSize="50" Foreground="#FFFFFFCC" Grid.Column="3" HorizontalAlignment="Center" Grid.Row="2" VerticalAlignment="Center" Height="81" Width="462" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="5,0,5,5" Cursor="Hand" MouseEnter="bigText_MouseEnter" MouseDown="playerVsPlayer_MouseDown" MouseLeave="smallText_MouseLeave"/>
-            <Label x:Name="playerVsComp" Content="Игрок vs Компьютер" FontFamily="/Backgammon;component/Font/#mr_DopestyleG" FontSize="50" Foreground="#FFFFFFCC" Grid.Column="3" HorizontalAlignment="Center" Grid.Row="3" VerticalAlignment="Center" Height="81" Width="462" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Padding="5,0,5,5" Cursor="Hand" MouseEnter="bigText_MouseEnter" MouseDown="playerVsComp_MouseDown" MouseLeave="smallText_MouseLeave"/>
-            <Label x:Name="save" Content="Сохранить игру" FontFamily="/Backgammon;component/Font/#mr_DopestyleG" FontSize="50" Foreground="#FFFFFFCC"  Grid.Column="3" HorizontalAlignment="Center" Grid.Row="4" VerticalAlignment="Center" Height="79" Width="462" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Padding="5,0,5,5" Cursor="Hand" MouseEnter="bigText_MouseEnter" MouseDown="save_MouseDown" MouseLeave="smallText_MouseLeave"/>
-            <Label x:Name="load" Content="Загрузить игру" FontFamily="/Backgammon;component/Font/#mr_DopestyleG" FontSize="50" Foreground="#FFFFFFCC" Grid.Column="3" HorizontalAlignment="Center" Grid.Row="5" VerticalAlignment="Center" Height="81" Width="462" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Padding="5,0,5,5" Cursor="Hand" MouseEnter="bigText_MouseEnter" MouseDown="load_MouseDown" MouseLeave="smallText_MouseLeave"/>
-            <Label x:Name="exit" Content="Выход" FontFamily="/Backgammon;component/Font/#mr_DopestyleG" FontSize="50" Foreground="#FFFFFFCC" Grid.Column="3" HorizontalAlignment="Center" Grid.Row="6" VerticalAlignment="Center" Height="79" Width="462" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="5,0,5,5" Cursor="Hand" MouseEnter="bigText_MouseEnter" MouseDown="exit_MouseDown" MouseLeave="smallText_MouseLeave"/>
+            <Label x:Name="backToGame" Content="Вернуться в игру" FontFamily="/Backgammon;component/Font/#mr_DopestyleG" FontSize="50" Foreground="#FFFFFFCC" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center" Height="80" Width="462" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="5,0,5,5" Cursor="Hand" MouseEnter="bigText_MouseEnter" MouseDown="backToGame_MouseDown" MouseLeave="smallText_MouseLeave" Grid.Row="1" Visibility="Hidden" Margin="0,2"/>
+            <Label x:Name="playerVsPlayer" Content="Игрок vs Игрок" FontFamily="/Backgammon;component/Font/#mr_DopestyleG" FontSize="50" Foreground="#FFFFFFCC" Grid.Column="3" HorizontalAlignment="Center" Grid.Row="2" VerticalAlignment="Center" Height="87" Width="462" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="5,0,5,5" Cursor="Hand" MouseEnter="bigText_MouseEnter" MouseDown="playerVsPlayer_MouseDown" MouseLeave="smallText_MouseLeave"/>
+            <Label x:Name="playerVsComp" Content="Игрок vs Компьютер" FontFamily="/Backgammon;component/Font/#mr_DopestyleG" FontSize="50" Foreground="#FFFFFFCC" Grid.Column="3" HorizontalAlignment="Center" Grid.Row="3" VerticalAlignment="Center" Height="83" Width="462" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Padding="5,0,5,5" Cursor="Hand" MouseEnter="bigText_MouseEnter" MouseDown="playerVsComp_MouseDown" MouseLeave="smallText_MouseLeave" Margin="0,1,0,0"/>
+            <Label x:Name="save" Content="Сохранить игру" FontFamily="/Backgammon;component/Font/#mr_DopestyleG" FontSize="50" Foreground="#FFFFFFCC"  Grid.Column="3" HorizontalAlignment="Center" Grid.Row="4" VerticalAlignment="Center" Height="89" Width="462" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Padding="5,0,5,5" Cursor="Hand" MouseEnter="bigText_MouseEnter" MouseDown="save_MouseDown" MouseLeave="smallText_MouseLeave"/>
+            <Label x:Name="load" Content="Загрузить игру" FontFamily="/Backgammon;component/Font/#mr_DopestyleG" FontSize="50" Foreground="#FFFFFFCC" Grid.Column="3" HorizontalAlignment="Center" Grid.Row="5" VerticalAlignment="Center" Height="85" Width="462" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Padding="5,0,5,5" Cursor="Hand" MouseEnter="bigText_MouseEnter" MouseDown="load_MouseDown" MouseLeave="smallText_MouseLeave"/>
+            <Label x:Name="exit" Content="Выход" FontFamily="/Backgammon;component/Font/#mr_DopestyleG" FontSize="50" Foreground="#FFFFFFCC" Grid.Column="3" HorizontalAlignment="Center" Grid.Row="6" VerticalAlignment="Center" Height="83" Width="462" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="5,0,5,5" Cursor="Hand" MouseEnter="bigText_MouseEnter" MouseDown="exit_MouseDown" MouseLeave="smallText_MouseLeave"/>
         </Grid>
         <Grid x:Name="resultGame" HorizontalAlignment="Center" Height="{DynamicResource {x:Static SystemParameters.PrimaryScreenHeightKey}}" VerticalAlignment="Center" Width="{DynamicResource {x:Static SystemParameters.PrimaryScreenWidthKey}}" Visibility="Hidden" MouseDown="resultGame_MouseDown">
             <Grid.Background>
@@ -167,8 +167,8 @@
                     <RowDefinition Height="385*"/>
                     <RowDefinition Height="48*"/>
                 </Grid.RowDefinitions>
-                <ListBox x:Name="listDialog" HorizontalAlignment="Center" Height="385" VerticalAlignment="Center" Width="694" HorizontalContentAlignment="Center" Background="#FF8E3103" FontFamily="/Backgammon;component/Font/#mr_DopestyleG" FontSize="14" BorderBrush="#FFFFFFCA" BorderThickness="4" Grid.Row="0"/>
-                <TextBox x:Name="fileName" HorizontalAlignment="Center" Height="48" VerticalAlignment="Center" Width="694" VerticalContentAlignment="Center" TextWrapping="Wrap" Text="" FontFamily="Comic Sans MS" Foreground="#FFFFFFCC" Background="#FF8C3206" FontSize="18" BorderThickness="4" Cursor="Hand" SelectionBrush="#FFFFFFCC" BorderBrush="#FFFFFFCC" Grid.Row="1"/>
+                <ListBox x:Name="listDialog" HorizontalAlignment="Center" Height="385" VerticalAlignment="Center" Width="694" Background="#FF8E3103" FontFamily="Comic Sans MS" FontSize="18" BorderBrush="#FFFFFFCA" BorderThickness="4" Grid.Row="0" Foreground="#FFFFFFCC" SelectionChanged="listDialog_SelectionChanged"/>
+                <TextBox x:Name="fileName" HorizontalAlignment="Center" Height="48" VerticalAlignment="Center" Width="694" VerticalContentAlignment="Center" TextWrapping="Wrap" Text="" FontFamily="Comic Sans MS" Foreground="#FFFFFFCC" Background="#FF8C3206" FontSize="18" BorderThickness="4" Cursor="Hand" SelectionBrush="#FFFFFFCC" BorderBrush="#FFFFFFCC" Grid.Row="1" CaretBrush="#FFFFFFCC"/>
             </Grid>
         </Grid>
     </Grid>
