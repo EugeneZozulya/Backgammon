@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using System.Xml.Serialization;
 using System.Xml;
 using System.Text;
 using System.Collections.Generic;
@@ -99,11 +98,11 @@ namespace Backgammon
         {
             GameController game = null;
             if (!Directory.Exists("Saves")) Directory.CreateDirectory("Saves");
-            if (File.Exists(Path.GetFullPath("Saves") + "\\" + fileName + ".xml"))
+            if (File.Exists(Path.GetFullPath("Saves") + "\\" + fileName))
             {
                 game = new GameController();
                 XmlDocument document = new XmlDocument();
-                document.Load(Path.GetFullPath("Saves") + "\\" + fileName + ".xml");
+                document.Load(Path.GetFullPath("Saves") + "\\" + fileName);
                 XmlElement root = document.DocumentElement;
                 XmlNodeList nodeList = root.ChildNodes;
                 //load Dices

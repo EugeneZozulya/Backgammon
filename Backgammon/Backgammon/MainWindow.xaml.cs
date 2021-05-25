@@ -188,9 +188,41 @@ namespace Backgammon
         }
         private void loadOrSave_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if(loadingOrSaving.Content.ToString() == "Сохранить игру")
+            if (loadingOrSaving.Content.ToString() == "Сохранить игру")
                 xmlManage.Save(fileName.Text, game);
-            else game = xmlManage.Download(fileName.Text);
+            else
+            {
+                game = xmlManage.Download(fileName.Text);
+                DrawCheckers();
+                UIElementCollection checkers = gameField.Children;
+                for (int i = 1; i<game.gameField.Field.Length; i++)
+                {
+                    if (i == 12) continue;
+                    int numChecker = game.gameField.Field[i];
+                    int oldRow = 2, oldColumn = 2, newRow, newColumn;
+                    (newRow, newColumn) = CalculateRowAndColumn(i);
+                    if (numChecker < 0)
+                    {
+                        numChecker = -numChecker;
+                        oldRow = 1;
+                        oldColumn = 24;
+                    }
+                    int offset = numChecker + 1;
+                    for (int j = checkers.Count - 1; j >= 0 || numChecker>0; j--)
+                    {
+                        if(Grid.GetColumn(checkers[i])==oldColumn && Grid.GetRow(checkers[i])==oldRow)
+                        {
+                            selectedImage = (Image)checkers[i];
+                            Grid.SetColumn(selectedImage, newColumn);
+                            Grid.SetRow(selectedImage, newRow);
+                            Panel.SetZIndex(selectedImage, offset - numChecker);
+                            SetMargin(i, newRow, offset - numChecker - 1, offset - numChecker - 1);
+                            numChecker--;
+                        }
+                    }
+                }
+                
+            }
             back_MouseDown(null, null);
         }
         private void DrawCheckers()
@@ -299,7 +331,7 @@ namespace Backgammon
                         else Panel.SetZIndex(selectedImage, 0 + game.gameField.Field[newIndex]);
                     }
                     if (newIndex == -1) TakeAwayCheckers(oldindex);
-                    else SetMargin(newIndex, numRow);
+                    else SetMargin(newIndex, numRow, -(game.gameField.Field[newIndex] + 1), (game.gameField.Field[newIndex] - 1));
                 }
                 isFocus = false;
                 gameField.Background = null;
@@ -363,23 +395,23 @@ namespace Backgammon
                 Panel.SetZIndex(selectedImage, 15 + game.gameField.Field[oldindex]);
             }
         }
-        private void SetMargin(int newIndex, int numRow)
+        private void SetMargin(int newIndex, int numRow, int offsetBottom, int offsetTop)
         {
             if (game.gameField.Field[newIndex] < 0)
             {
                 if (numRow == 2)
                 {
-                    selectedImage.Margin = new Thickness(0, 0, 0, 19 * -(game.gameField.Field[newIndex] + 1));
+                    selectedImage.Margin = new Thickness(0, 0, 0, 19 * offsetBottom);
                     selectedImage.VerticalAlignment = VerticalAlignment.Bottom;
                 }
-                else selectedImage.Margin = new Thickness(0, 19 * -(game.gameField.Field[newIndex] + 1), 0, 0);
+                else selectedImage.Margin = new Thickness(0, 19 * offsetBottom, 0, 0);
             }
             else if (game.gameField.Field[newIndex] > 0)
             {
-                if (numRow == 2) selectedImage.Margin = new Thickness(0, 0, 0, 19 * (game.gameField.Field[newIndex] - 1));
+                if (numRow == 2) selectedImage.Margin = new Thickness(0, 0, 0, 19 * offsetTop);
                 else
                 {
-                    selectedImage.Margin = new Thickness(0, 19 * (game.gameField.Field[newIndex] - 1), 0, 0);
+                    selectedImage.Margin = new Thickness(0, 19 * offsetTop, 0, 0);
                     selectedImage.VerticalAlignment = VerticalAlignment.Top;
                 }
             }
@@ -408,7 +440,7 @@ namespace Backgammon
                             Grid.SetColumn(selectedImage, newColumn);
                             Grid.SetRow(selectedImage, newRow);
                             Panel.SetZIndex(selectedImage, -game.gameField.Field[newIndex]);
-                            SetMargin(newIndex, newRow);
+                            SetMargin(newIndex, newRow, -(game.gameField.Field[newIndex] + 1), (game.gameField.Field[newIndex] - 1));
                             break;
                         }
                     }
@@ -438,7 +470,6 @@ namespace Backgammon
             column = index * 2;
             return (row, column);
         }
-
         private void listDialog_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             System.Collections.IList collection = e.AddedItems;
@@ -450,3 +481,4 @@ namespace Backgammon
         }
     }
 }
+
