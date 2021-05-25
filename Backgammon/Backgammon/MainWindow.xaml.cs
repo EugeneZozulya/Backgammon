@@ -26,7 +26,7 @@ namespace Backgammon
             InitializeComponent();
         }
         /// <summary>
-        /// MouseDown event of the label "Выход".
+        /// MouseDown event of the label "exit".
         /// </summary>
         /// <param name="sender"> Object. </param>
         /// <param name="e"> Object of MouseButtonEventArgs class. </param>
@@ -35,7 +35,7 @@ namespace Backgammon
             this.Close();
         }
         /// <summary>
-        /// MouseDown event of the label "Игрок vs Игрок".
+        /// MouseDown event of the label "playerVsPlayer".
         /// </summary>
         /// <param name="sender"> Object. </param>
         /// <param name="e"> Object of MouseButtonEventArgs class. </param>
@@ -55,7 +55,7 @@ namespace Backgammon
             homePlayer2.Content = "Дом Player2";
         }
         /// <summary>
-        /// MouseDown event of the label "Сдаться".
+        /// MouseDown event of the label "controlMenu".
         /// </summary>
         /// <param name="sender"> Object. </param>
         /// <param name="e"> Object of MouseButtonEventArgs class. </param>
@@ -67,7 +67,7 @@ namespace Backgammon
             mainMenu.Visibility = Visibility.Visible;
         }
         /// <summary>
-        /// MouseDown event of the label "Игрок vs Компьютер".
+        /// MouseDown event of the label "playerVsComp".
         /// </summary>
         /// <param name="sender"> Object. </param>
         /// <param name="e"> Object of MouseButtonEventArgs class. </param>
@@ -87,34 +87,63 @@ namespace Backgammon
             mainMenu.Visibility = Visibility.Hidden;
             if (game.Player2.State && game.Player2 is Computer) ComputerMove();
         }
+        /// <summary>
+        /// MouseDown event of the label "controlSurrender".
+        /// </summary>
+        /// <param name="sender"> Object. </param>
+        /// <param name="e"> Object of MouseButtonEventArgs class. </param>
         private void controlSurrender_MouseDown(object sender, MouseButtonEventArgs e)
         {
             ImageSource winPlayer1 = new BitmapImage(new Uri("pack://application:,,,/Backgammon;component/Image/WinPlayer1.png", UriKind.RelativeOrAbsolute));
             ImageSource winPlayer2 = new BitmapImage(new Uri("pack://application:,,,/Backgammon;component/Image/WinPlayer2.png", UriKind.RelativeOrAbsolute));
+            ImageSource winComp = new BitmapImage(new Uri("pack://application:,,,/Backgammon;component/Image/WinComp.png", UriKind.RelativeOrAbsolute));
             if (game.Player1.State && game.Mode == GameMode.playerVsPlayer) resultGame.Background = new ImageBrush(winPlayer2);
-            else if (game.Player2.State) resultGame.Background = new ImageBrush(winPlayer1);
+            else if (game.Player2.State && game.Mode == GameMode.playerVsPlayer) resultGame.Background = new ImageBrush(winPlayer1);
+            else resultGame.Background = new ImageBrush(winComp);
             resultGame.Visibility = Visibility.Visible;
             gameField.Visibility = Visibility.Hidden;
             control.Visibility = Visibility.Hidden;
             game = null;
         }
+        /// <summary>
+        /// MouseDown event of the grid "resultGame".
+        /// </summary>
+        /// <param name="sender"> Object. </param>
+        /// <param name="e"> Object of MouseButtonEventArgs class. </param>
         private void resultGame_MouseDown(object sender, MouseButtonEventArgs e)
         {
             resultGame.Visibility = Visibility.Hidden;
             backToGame.Visibility = Visibility.Hidden;
             mainMenu.Visibility = Visibility.Visible;
+            player1Dice.Visibility = Visibility.Hidden;
+            player2Dice.Visibility = Visibility.Hidden;
 
         }
+        /// <summary>
+        /// MouseEnter event of the labels "controlSurrender" and "controlMenu".
+        /// </summary>
+        /// <param name="sender"> Object. </param>
+        /// <param name="e"> Object of MouseEventArgs class. </param>
         private void controlText_MouseEnter(object sender, MouseEventArgs e)
         {
             Label label = (Label)sender;
             label.Foreground = Brushes.White;
         }
+        /// <summary>
+        /// MouseLeave event of the labels "controlSurrender" and "controlMenu".
+        /// </summary>
+        /// <param name="sender"> Object. </param>
+        /// <param name="e"> Object of MouseEventArgs class. </param>
         private void controlText_MouseLeave(object sender, MouseEventArgs e)
         {
             Label label = (Label)sender;
             label.Foreground = new SolidColorBrush(Color.FromRgb(255, 254, 204));
         }
+        /// <summary>
+        /// KeyDown event of the Window "MainWindow". 
+        /// </summary>
+        /// <param name="sender"> Object. </param>
+        /// <param name="e"> Object of KeyEventArgs class. </param>
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Escape)
@@ -128,24 +157,45 @@ namespace Backgammon
                 mainMenu.Visibility = Visibility.Visible;
             }
         }
+        /// <summary>
+        /// MouseDown event of the label "save".
+        /// </summary>
+        /// <param name="sender"> Object. </param>
+        /// <param name="e"> Object of MouseButtonEventArgs class. </param>
         private void save_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            ShowFileInfo();
             mainMenu.Visibility = Visibility.Hidden;
             saveOrDownload.Visibility = Visibility.Visible;
             dialog.Visibility = Visibility.Visible;
             loadingOrSaving.Content = "Сохранить игру";
-            ShowFileInfo();
+            if(game == null)
+            {
+                fileName.IsEnabled = false;
+                fileName.Text = "Сохранить игру невозмно. Начините/загрузите игру.";
+            }
             fileName.Focus();
         }
+        /// <summary>
+        /// MouseDown event of the label "load".
+        /// </summary>
+        /// <param name="sender"> Object. </param>
+        /// <param name="e"> Object of MouseButtonEventArgs class. </param>
         private void load_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            ShowFileInfo();
             mainMenu.Visibility = Visibility.Hidden;
             saveOrDownload.Visibility = Visibility.Visible;
             dialog.Visibility = Visibility.Visible;
             loadingOrSaving.Content = "Загрузить игру";
-            ShowFileInfo();
             fileName.IsEnabled = false;
+            fileName.Text = "";
         }
+        /// <summary>
+        /// MouseDown event of the Image "controlDice".
+        /// </summary>
+        /// <param name="sender"> Object. </param>
+        /// <param name="e"> Object of MouseButtonEventArgs class. </param>
         private void controlDice_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if(mode == GameMode.playerVsComp && game.Player2.State)
@@ -158,12 +208,22 @@ namespace Backgammon
             game.GenerateDice();
             ShowDice();
         }
+        /// <summary>
+        /// MouseDown event of the label "backToGame".
+        /// </summary>
+        /// <param name="sender"> Object. </param>
+        /// <param name="e"> Object of MouseButtonEventArgs class. </param>
         private void backToGame_MouseDown(object sender, MouseButtonEventArgs e)
         {
             mainMenu.Visibility = Visibility.Hidden;
             gameField.Visibility = Visibility.Visible;
             control.Visibility = Visibility.Visible;
         }
+        /// <summary>
+        /// MouseDown event of the label "yes".
+        /// </summary>
+        /// <param name="sender"> Object. </param>
+        /// <param name="e"> Object of MouseButtonEventArgs class. </param>
         private void yes_MouseDown(object sender, MouseButtonEventArgs e)
         {
             newGame.Visibility = Visibility.Hidden;
@@ -175,56 +235,80 @@ namespace Backgammon
             DrawCheckers();
             if (mode == GameMode.playerVsComp && game.Player2.State) ComputerMove();
         }
+        /// <summary>
+        /// MouseDown event of the label "no".
+        /// </summary>
+        /// <param name="sender"> Object. </param>
+        /// <param name="e"> Object of MouseButtonEventArgs class. </param>
         private void no_MouseDown(object sender, MouseButtonEventArgs e)
         {
             newGame.Visibility = Visibility.Hidden;
             mainMenu.Visibility = Visibility.Visible;
         }
+        /// <summary>
+        /// MouseDown event of the label "back".
+        /// </summary>
+        /// <param name="sender"> Object. </param>
+        /// <param name="e"> Object of MouseButtonEventArgs class. </param>
         private void back_MouseDown(object sender, MouseButtonEventArgs e)
         {
             saveOrDownload.Visibility = Visibility.Hidden;
             dialog.Visibility = Visibility.Hidden;
             mainMenu.Visibility = Visibility.Visible;
         }
+        /// <summary>
+        /// MouseDown event of the label "loadOrSave".
+        /// </summary>
+        /// <param name="sender"> Object. </param>
+        /// <param name="e"> Object of MouseButtonEventArgs class. </param>
         private void loadOrSave_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (loadingOrSaving.Content.ToString() == "Сохранить игру")
-                xmlManage.Save(fileName.Text, game);
-            else
+            if (game != null)
             {
-                game = xmlManage.Download(fileName.Text);
-                DrawCheckers();
-                UIElementCollection checkers = gameField.Children;
-                for (int i = 1; i<game.gameField.Field.Length; i++)
+                if (loadingOrSaving.Content.ToString() == "Сохранить игру")
                 {
-                    if (i == 12) continue;
-                    int numChecker = game.gameField.Field[i];
-                    int oldRow = 2, oldColumn = 2, newRow, newColumn;
-                    (newRow, newColumn) = CalculateRowAndColumn(i);
-                    if (numChecker < 0)
+                    xmlManage.Save(fileName.Text, game);
+                    back_MouseDown(null, null);
+                }
+                else
+                {
+                    game = xmlManage.Download(fileName.Text);
+                    DrawCheckers();
+                    UIElementCollection checkers = gameField.Children;
+                    for (int i = 1; i < game.gameField.Field.Length; i++)
                     {
-                        numChecker = -numChecker;
-                        oldRow = 1;
-                        oldColumn = 24;
-                    }
-                    int offset = numChecker + 1;
-                    for (int j = checkers.Count - 1; j >= 0 || numChecker>0; j--)
-                    {
-                        if(Grid.GetColumn(checkers[i])==oldColumn && Grid.GetRow(checkers[i])==oldRow)
+                        if (i == 12) continue;
+                        int numChecker = game.gameField.Field[i];
+                        int oldRow = 2, oldColumn = 2, newRow, newColumn;
+                        (newRow, newColumn) = CalculateRowAndColumn(i);
+                        if (numChecker < 0)
                         {
-                            selectedImage = (Image)checkers[i];
-                            Grid.SetColumn(selectedImage, newColumn);
-                            Grid.SetRow(selectedImage, newRow);
-                            Panel.SetZIndex(selectedImage, offset - numChecker);
-                            SetMargin(i, newRow, offset - numChecker - 1, offset - numChecker - 1);
-                            numChecker--;
+                            numChecker = -numChecker;
+                            oldRow = 1;
+                            oldColumn = 24;
+                        }
+                        int offset = numChecker + 1;
+                        for (int j = checkers.Count - 1; j >= 0 || numChecker > 0; j--)
+                        {
+                            if (Grid.GetColumn(checkers[i]) == oldColumn && Grid.GetRow(checkers[i]) == oldRow)
+                            {
+                                selectedImage = (Image)checkers[i];
+                                Grid.SetColumn(selectedImage, newColumn);
+                                Grid.SetRow(selectedImage, newRow);
+                                Panel.SetZIndex(selectedImage, offset - numChecker);
+                                SetMargin(i, newRow, offset - numChecker - 1, offset - numChecker - 1);
+                                numChecker--;
+                            }
                         }
                     }
+                    back_MouseDown(null, null);
+                    backToGame_MouseDown(null, null);
                 }
-                
             }
-            back_MouseDown(null, null);
         }
+        /// <summary>
+        /// Draw the checkers on the game field.
+        /// </summary>
         private void DrawCheckers()
         {
             gameField.Children.Clear();
@@ -265,15 +349,46 @@ namespace Backgammon
                 }
             }
         }
+        /// <summary>
+        /// Animation for the labels.
+        /// </summary>
+        /// <param name="label"> Label. </param>
+        /// <param name="size"> Font size. </param>
+        /// <param name="color"> Font color. </param>
         private void Animation(Label label, int size, Color color)
         {
             label.FontSize = size;
             label.Foreground = new SolidColorBrush(color);
         }
+        /// <summary>
+        /// MouseEnter event of the labels "save", "load","exit","playerVsPlayer","playerVsComp","backToGame","back","loadOrSave".
+        /// </summary>
+        /// <param name="sender"> Object. </param>
+        /// <param name="e"> Object of MouseEventArgs class. </param>
         private void bigText_MouseEnter(object sender, MouseEventArgs e) => Animation((Label)sender, 52, Color.FromRgb(255, 255, 255));
+        /// <summary>
+        /// MouseLeave event of the labels "save", "load","exit","playerVsPlayer","playerVsComp","backToGame","back","loadOrSave".
+        /// </summary>
+        /// <param name="sender"> Object. </param>
+        /// <param name="e"> Object of MouseEventArgs class. </param>
         private void smallText_MouseLeave(object sender, MouseEventArgs e) => Animation((Label)sender, 50, Color.FromRgb(255, 254, 204));
+        /// <summary>
+        /// MouseEnter event of the labels "yes", "no".
+        /// </summary>
+        /// <param name="sender"> Object. </param>
+        /// <param name="e"> Object of MouseEventArgs class. </param>
         private void noOrYesText_MouseEnter(object sender, MouseEventArgs e) => Animation((Label)sender, 92, Color.FromRgb(255, 255, 255));
+        /// <summary>
+        /// MouseLeave event of the labels "yes", "no".
+        /// </summary>
+        /// <param name="sender"> Object. </param>
+        /// <param name="e"> Object of MouseEventArgs class. </param>
         private void noOrYesText_MouseLeave(object sender, MouseEventArgs e) => Animation((Label)sender, 90, Color.FromRgb(255, 254, 204));
+        /// <summary>
+        /// MouseLeftButtonDown event of the image "checker".
+        /// </summary>
+        /// <param name="sender"> Object. </param>
+        /// <param name="e"> Object of MouseButtonEventArgs class. </param>
         private void selectChecker_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             Image checker = (Image)sender;
@@ -298,6 +413,11 @@ namespace Backgammon
                 Panel.SetZIndex(border, Panel.GetZIndex(selectedImage));
             }
         }
+        /// <summary>
+        /// MouseLeftButtonDown event of the grid "gameFiled".
+        /// </summary>
+        /// <param name="sender"> Object. </param>
+        /// <param name="e"> Object of MouseButtonEventArgs class. </param>
         private void gameField_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (selectedImage != null && isFocus)
@@ -339,6 +459,12 @@ namespace Backgammon
             }
             else if(selectedImage!=null) isFocus = true;
         }
+        /// <summary>
+        /// Take a game turn.
+        /// </summary>
+        /// <param name="oldIndex"> The number of the cell from which the checker moves. </param>
+        /// <param name="newIndex"> The number of the cell where which the checker moves. </param>
+        /// <returns> True - executed, false - didn't executed </returns>
         private bool GameTurn(int oldIndex, int newIndex)
         {
             int countCheckers = 0;
@@ -361,6 +487,9 @@ namespace Backgammon
             }
             return isMove;
         }
+        /// <summary>
+        /// Show dice value on the grid "control".
+        /// </summary>
         private void ShowDice()
         {
             if (game.Player1.State)
@@ -376,6 +505,10 @@ namespace Backgammon
                 player1Dice.Visibility = Visibility.Hidden;
             }
         }
+        /// <summary>
+        /// Take away checkers on the side of the board.
+        /// </summary>
+        /// <param name="oldindex">The number of the cell from which the checker moves. </param>
         private void TakeAwayCheckers(int oldindex)
         {
             if (oldindex > 17 && oldindex <24)
@@ -395,6 +528,13 @@ namespace Backgammon
                 Panel.SetZIndex(selectedImage, 15 + game.gameField.Field[oldindex]);
             }
         }
+        /// <summary>
+        /// Set offset on the grid columns.
+        /// </summary>
+        /// <param name="newIndex">The number of the cell where which the checker moves.</param>
+        /// <param name="numRow"> The number of the row. </param>
+        /// <param name="offsetBottom"> Offset for the row 2. </param>
+        /// <param name="offsetTop"> Offset for the row 1. </param>
         private void SetMargin(int newIndex, int numRow, int offsetBottom, int offsetTop)
         {
             if (game.gameField.Field[newIndex] < 0)
@@ -416,6 +556,9 @@ namespace Backgammon
                 }
             }
         }
+        /// <summary>
+        /// Computer take a game turn.
+        /// </summary>
         private void ComputerMove()
         {
             int newIndex, oldIndex;
@@ -450,17 +593,31 @@ namespace Backgammon
             game.Dices[1] = game.Dices[4];
             ShowDice();
         }
+        /// <summary>
+        /// Show save files info.
+        /// </summary>
         private void ShowFileInfo()
         {
+            ItemCollection collection = listDialog.Items;
+            for (int i = 0; i < collection.Count; i++)
+                listDialog.Items.RemoveAt(i);
             string[] fileNames, fileInfo;
             (fileNames, fileInfo) = xmlManage.SearchSave();
-            for(int i = 0; i < fileNames.Length; i++)
+            if (fileNames != null && fileInfo != null)
             {
-                int index = fileNames[i].LastIndexOf('\\') + 1;
-                string name = fileNames[i].Substring(index, fileNames[i].Length  - index);
-                listDialog.Items.Add(name + "    Дата создания: " + fileInfo[i]);
+                for (int i = 0; i < fileNames.Length; i++)
+                {
+                    int index = fileNames[i].LastIndexOf('\\') + 1;
+                    string name = fileNames[i].Substring(index, fileNames[i].Length - index);
+                    listDialog.Items.Add(name + "    Дата создания: " + fileInfo[i]);
+                }
             }
         }
+        /// <summary>
+        /// Calculate the number of the rown and of the column for cell of the game field.
+        /// </summary>
+        /// <param name="index"> The number of the cell where which the checker moves. </param>
+        /// <returns></returns>
         private (int,int) CalculateRowAndColumn(int index)
         {
             int row = 2, column;
@@ -470,14 +627,22 @@ namespace Backgammon
             column = index * 2;
             return (row, column);
         }
+        /// <summary>
+        /// SelectionChanged event of the ListBox "listDialog". 
+        /// </summary>
+        /// <param name="sender"> Object. </param>
+        /// <param name="e"> Object of SelectionChangedEventArgs class. </param>>
         private void listDialog_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            System.Collections.IList collection = e.AddedItems;
-            string name = (string)collection[0], flName;
-            int index = name.LastIndexOf(".xml");
-            index = index + 4;
-            flName = name.Substring(0, index);
-            fileName.Text = flName;
+            if (game != null || (game == null && loadingOrSaving.Content.ToString() != "Сохранить игру"))
+            {
+                System.Collections.IList collection = e.AddedItems;
+                string name = (string)collection[0], flName;
+                int index = name.LastIndexOf(".xml");
+                index = index + 4;
+                flName = name.Substring(0, index);
+                fileName.Text = flName;
+            }
         }
     }
 }

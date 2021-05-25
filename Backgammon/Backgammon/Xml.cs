@@ -151,11 +151,15 @@ namespace Backgammon
         /// <returns> Files name and files info. </returns>
         public (string[], string[]) SearchSave()
         {
-            string[] filesName = Directory.GetFiles(Path.GetFullPath("Saves"));
-            string[] filesInfo = new string[filesName.Length];
-            for(int i = 0; i<filesName.Length; i++)
+            string[] filesName = null, filesInfo = null;
+            if (Directory.Exists("Saves"))
             {
-                filesInfo[i] = File.GetCreationTime(filesName[i]).ToLongDateString();
+                filesName = Directory.GetFiles(Path.GetFullPath("Saves"));
+                filesInfo = new string[filesName.Length];
+                for (int i = 0; i < filesName.Length; i++)
+                {
+                    filesInfo[i] = File.GetCreationTime(filesName[i]).ToLongDateString();
+                }
             }
             return (filesName,filesInfo);
         }
