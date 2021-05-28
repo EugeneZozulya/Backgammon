@@ -213,12 +213,13 @@ namespace Backgammon
             if (game.Dices[0] != 0 || game.Dices[1] != 0) return;
             game.GenerateDice();
             ShowDice();
-            //if (!game.CheckedMove())
-            //{
-            //    game.Dices[0] = game.Dices[1] = 0;
-            //    game.Player1.State = !game.Player1.State;
-            //    game.Player2.State = !game.Player2.State;
-            //}
+            if(!game.CheckedMove() && !game.CheckedTakingAway())
+            {
+                game.Dices[0] = game.Dices[1] = 0;
+                game.Player1.State = !game.Player1.State;
+                game.Player2.State = !game.Player2.State;
+            }
+            if (game.Mode == GameMode.playerVsComp && game.Player2.State) ComputerMove();
         }
         /// <summary>
         /// MouseDown event of the label "backToGame".
@@ -327,6 +328,7 @@ namespace Backgammon
                 {
                     PutOnTheBoard(player1Checker, player2Checker);
                 }
+                selectedImage = null;
                 ShowDice();
                 back_MouseDown(null, null);
                 backToGame_MouseDown(null, null);
@@ -461,7 +463,7 @@ namespace Backgammon
                 oldindex = (Grid.GetColumn(selectedImage) - 1) / 2;
                 if (Grid.GetRow(selectedImage)==1)
                     oldindex = 23 - oldindex;
-                if(numRow == 1) newIndex = 23 - newIndex;
+                if(numRow == 1 && newIndex!=-1) newIndex = 23 - newIndex;
                 if (numColumn > 12)
                 {
                     numColumn = 27;
@@ -482,7 +484,7 @@ namespace Backgammon
                     if (newIndex == -1) TakeAwayCheckers(oldindex);
                     else SetMargin(newIndex, numRow, -(game.gameField.Field[newIndex] + 1), (game.gameField.Field[newIndex] - 1));
                 }
-                if (!game.CheckedMove())
+                if (!game.CheckedMove() && !game.CheckedTakingAway())
                 {
                     game.Dices[0] = game.Dices[1] = 0;
                     game.Player1.State = !game.Player1.State;
@@ -555,6 +557,7 @@ namespace Backgammon
         /// <param name="oldindex">The number of the cell from which the checker moves. </param>
         private void TakeAwayCheckers(int oldindex)
         {
+            //if the first player is a checker
             if (oldindex > 17 && oldindex <24 && game.CheckedFirstHome())
             {
                 Grid.SetRow(selectedImage, 2);
@@ -564,6 +567,7 @@ namespace Backgammon
                 Panel.SetZIndex(selectedImage, 15 - offsetChecker1);
                 offsetChecker1++;
             }
+            //if the second player is a checker
             else if (oldindex > 5 && oldindex < 12 && game.CheckedSecondHome())
             {
                 Grid.SetRow(selectedImage, 1);
@@ -624,18 +628,23 @@ namespace Backgammon
                     (newRow, newColumn) = CalculateRowAndColumn(newIndex);
                     UIElementCollection checkers = gameField.Children;
                     //Moving checker
-                    for (int i = checkers.Count-1; i >= 0; i--)
+                    for (int i = checkers.Count - 1; i >= 0; i--)
                     {
-                        if (Grid.GetColumn(checkers[i]) == oldColumn && Grid.GetRow(checkers[i]) == oldRow) //&& Panel.GetZIndex(checkers[i]) == (-(game.gameField.Field[oldIndex] - 1))
-                        { 
+                        if (Grid.GetColumn(checkers[i]) == oldColumn && Grid.GetRow(checkers[i]) == oldRow)
+                        {
                             selectedImage = (Image)checkers[i];
-                            Grid.SetColumn(selectedImage, newColumn);
-                            Grid.SetRow(selectedImage, newRow);
-                            Panel.SetZIndex(selectedImage, -game.gameField.Field[newIndex]);
-                            SetMargin(newIndex, newRow, -(game.gameField.Field[newIndex] + 1), (game.gameField.Field[newIndex] - 1));
+                            if (newIndex == -1) TakeAwayCheckers(oldIndex);
+                            else
+                            {
+                                Grid.SetColumn(selectedImage, newColumn);
+                                Grid.SetRow(selectedImage, newRow);
+                                Panel.SetZIndex(selectedImage, -game.gameField.Field[newIndex]);
+                                SetMargin(newIndex, newRow, -(game.gameField.Field[newIndex] + 1), (game.gameField.Field[newIndex] - 1));
+                            }
                             break;
                         }
                     }
+                    if (game.Player2.State && game.CheckedSecondHome() && !game.CheckedTakingAway()) game.Dices[0] = game.Dices[1] = 0;
                 }
             }
             game.Dices[0] = game.Dices[3];
@@ -689,8 +698,7 @@ namespace Backgammon
                 if (collection.Count != 0)
                 {
                     string name = (string)collection[0], flName;
-                    int index = name.LastIndexOf(".xml");
-                    index = index + 4;
+                    int index = name.IndexOf(".xml");
                     flName = name.Substring(0, index);
                     fileName.Text = flName;
                 }
@@ -709,6 +717,7 @@ namespace Backgammon
             {
                 int oldindex;
                 selectedImage = (Image)checkers[j];
+                //if the first player is a checker
                 if (Grid.GetColumn(checkers[j]) == oldColumn1 && Grid.GetRow(checkers[j]) == oldRow1 && numPlayer1Checkers!=0)
                 {
                     oldindex = 19;
@@ -716,7 +725,8 @@ namespace Backgammon
                     numPlayer1Checkers--;
                     if (numPlayer1Checkers == 0) break;
                 }
-                else if(Grid.GetColumn(checkers[j]) == oldColumn2 && Grid.GetRow(checkers[j]) == oldRow2 && numPlayer2Checkers != 0)
+                //if the second player is a checker
+                else if (Grid.GetColumn(checkers[j]) == oldColumn2 && Grid.GetRow(checkers[j]) == oldRow2 && numPlayer2Checkers != 0)
                 {
                     oldindex = 9;
                     TakeAwayCheckers(oldindex);

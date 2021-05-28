@@ -223,11 +223,11 @@ namespace Backgammon
                 if (gameField.Field[i] > 0)//if player 1 move
                 {
                     //if cell with index each combination is >=0 the player 1 can move
-                    if ((step < gameField.Field.Length && gameField.Field[step] >= 0)
-                        || (step1 < gameField.Field.Length && gameField.Field[step1] >= 0)
-                        || (step2 < gameField.Field.Length && gameField.Field[step2] >= 0)
-                        || (step3 < gameField.Field.Length && gameField.Field[step3] >= 0)
-                        || (step4 < gameField.Field.Length && gameField.Field[step4] >= 0))
+                    if ((step!= i && step < gameField.Field.Length && gameField.Field[step] >= 0)
+                        || (step1 != i && step1 < gameField.Field.Length && gameField.Field[step1] >= 0)
+                        || (step2 != i && step2 < gameField.Field.Length && gameField.Field[step2] >= 0)
+                        || (step3 != i && step3 < gameField.Field.Length && gameField.Field[step3] >= 0)
+                        || (step4 != i && step4 < gameField.Field.Length && gameField.Field[step4] >= 0))
                         player1Moves = true;
                 }
                 else if (gameField.Field[i] < 0) //if player2 move
@@ -344,6 +344,27 @@ namespace Backgammon
             }
             if(Player1.State) result = isFirst;
             else result = isSecond; 
+            return result;
+        }
+        /// <summary>
+        /// Checking if the player can remove a checker from the board by the corresponding dice values
+        /// </summary>
+        /// <returns> True - he can, false - he can't. </returns>
+        public bool CheckedTakingAway()
+        {
+            bool result = false;
+            int step = 0;
+            if (Dices[2] == 2) step = Dices[0] + Dices[1];
+            if (Player2.State)
+            {
+                for (int i = 18; i < gameField.Field.Length; i++)
+                    if (gameField.Field[i]>0 &&((i + Dices[0] == gameField.Field.Length) || (i + Dices[1] == gameField.Field.Length) || (i + Dices[1] + Dices[0] == gameField.Field.Length) || (i + Dices[1] + Dices[0] + step == gameField.Field.Length))) result = true;
+            }
+            else
+            {
+                for (int i = 6; i < gameField.Field.Length/2; i++)
+                    if (gameField.Field[i] < 0 && ((i + Dices[0] == gameField.Field.Length/2) || (i + Dices[1] == gameField.Field.Length/2) || (i + Dices[1] + Dices[0] == gameField.Field.Length/2) || (i + Dices[1] + Dices[0] + step == gameField.Field.Length/2))) result = true;
+            }
             return result;
         }
     }

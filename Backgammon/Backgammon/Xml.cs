@@ -98,11 +98,11 @@ namespace Backgammon
         {
             GameController game = null;
             if (!Directory.Exists("Saves")) Directory.CreateDirectory("Saves");
-            if (File.Exists(Path.GetFullPath("Saves") + "\\" + fileName))
+            if (File.Exists(Path.GetFullPath("Saves") + "\\" + fileName + ".xml"))
             {
                 game = new GameController();
                 XmlDocument document = new XmlDocument();
-                document.Load(Path.GetFullPath("Saves") + "\\" + fileName);
+                document.Load(Path.GetFullPath("Saves") + "\\" + fileName + ".xml");
                 XmlElement root = document.DocumentElement;
                 XmlNodeList nodeList = root.ChildNodes;
                 //load Dices
