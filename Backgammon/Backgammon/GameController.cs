@@ -118,7 +118,7 @@ namespace Backgammon
         /// Determines how many checkers are in the player1 home.
         /// </summary>
         /// <returns> True - all checkers in the home, false - not all checkers in the home. </returns>
-        bool CheckedFirstHome()
+        public bool CheckedFirstHome()
         {
             bool result = false;
             int sum = 0, count = 0;
@@ -158,50 +158,50 @@ namespace Backgammon
         /// <param name="oldIndex"> The number of the cell from which the checker moves. </param>
         void TakeAway(int oldIndex)
         {
-            char numPlayer = '1';
-            if (Player2.State) numPlayer = '2';
-            int length = 0, flag = 1;
+            int length = gameField.Field.Length, flag = 1;
             int dice3 = 0, dice4 = 0;
             if (Dices[2] == 2) dice3 = dice4 = Dices[0];
             else if (Dices[2] == 1) dice3 = Dices[0];
-            switch (numPlayer)
-            {
-                case '1': length = gameField.Field.Length; break;
-                case '2': length = gameField.Field.Length / 2; flag = -1; break;
+            if (Player2.State) 
+            { 
+                length = gameField.Field.Length / 2; 
+                flag = -1; 
             }
-            if (oldIndex + Dices[0] == length)
+            if (Dices[2] > 0) //if took a double
             {
-                gameField.Field[oldIndex] -= flag;
-                if (Dices[2] > 0) Dices[2]--;
-                else Dices[0] = 0;
-            }
-            else if (oldIndex + Dices[1] == length)
-            {
-                gameField.Field[oldIndex] -= flag;
-                if (Dices[2] > 0) Dices[2]--;
-                else Dices[1] = 0;
-            }
-            else if ((oldIndex + Dices[0] + Dices[1]) == length)
-            {
-                gameField.Field[oldIndex] -= flag;
-                if (Dices[2] > 1) Dices[2] -= 2;
-                else if (Dices[2] > 0) { Dices[2]--; Dices[1] = 0; }
-                else Dices[1] = Dices[0] = 0;
-            }
-            else if(Dices[2]>0)
-            {
-                if ((oldIndex + Dices[0] + Dices[1] + dice3 + dice4) == length)
+                if ((oldIndex + Dices[0] + Dices[1] + dice3 + dice4) == length) //take away on the sum values of the dices
                 {
                     gameField.Field[oldIndex] -= flag;
                     Dices[0] = Dices[1] = Dices[2] = 0;
                 }
-                else if ((oldIndex + Dices[0] + Dices[1] + dice3) == length)
+                else if ((oldIndex + Dices[0] + Dices[1] + dice3) == length) //take away on the sum values of the three dices
                 {
                     gameField.Field[oldIndex] -= flag;
                     Dices[1] = Dices[2] = 0;
-                } 
+                }
             }
-
+            else
+            {
+                if ((oldIndex + Dices[0] + Dices[1]) == length) // take away on the sum values of the dices
+                {
+                    gameField.Field[oldIndex] -= flag;
+                    if (Dices[2] > 1) Dices[2] -= 2;
+                    else if (Dices[2] > 0) { Dices[2]--; Dices[1] = 0; }
+                    else Dices[1] = Dices[0] = 0;
+                }
+                else if (oldIndex + Dices[0] == length) // take away on the first value of the dice
+                {
+                    gameField.Field[oldIndex] -= flag;
+                    if (Dices[2] > 0) Dices[2]--;
+                    else Dices[0] = 0;
+                }
+                else if (oldIndex + Dices[1] == length) // take away on the second value of the dice
+                {
+                    gameField.Field[oldIndex] -= flag;
+                    if (Dices[2] > 0) Dices[2]--;
+                    else Dices[1] = 0;
+                }
+            }
         }
         /// <summary>
         /// Checks if the player can take a game turn.
@@ -209,10 +209,8 @@ namespace Backgammon
         /// <returns> True - he can, false - he can't. </returns>
         public bool CheckedMove()
         {
-            bool isPossible = false, player1Moves = false, player2Moves = false;
+            bool isPossible, player1Moves = false, player2Moves = false;
             int dice3 = 0, dice4 = 0;
-            char numPlayer = '1';
-            if (Player2.State) numPlayer = '2';
             if (Dices[2] == 2) dice3 = dice4 = Dices[0];
             else if (Dices[2] == 1) dice3 = Dices[0];
             for (int i = 0; i < gameField.Field.Length; i++)
@@ -222,8 +220,9 @@ namespace Backgammon
                 int step2 = i + Dices[0] + Dices[1];
                 int step3 = i + Dices[0] + Dices[1] + dice3;
                 int step4 = i + Dices[0] + Dices[1] + dice3 + dice4;
-                if (gameField.Field[i] > 0)
+                if (gameField.Field[i] > 0)//if player 1 move
                 {
+                    //if cell with index each combination is >=0 the player 1 can move
                     if ((step < gameField.Field.Length && gameField.Field[step] >= 0)
                         || (step1 < gameField.Field.Length && gameField.Field[step1] >= 0)
                         || (step2 < gameField.Field.Length && gameField.Field[step2] >= 0)
@@ -231,8 +230,9 @@ namespace Backgammon
                         || (step4 < gameField.Field.Length && gameField.Field[step4] >= 0))
                         player1Moves = true;
                 }
-                else if (gameField.Field[i] < 0)
+                else if (gameField.Field[i] < 0) //if player2 move
                 {
+                    //if cell with index each combination is <=0 the player 2 can move
                     if (step > gameField.Field.Length-1) step = step - gameField.Field.Length;
                     if (step1 > gameField.Field.Length-1) step1 = step1 - gameField.Field.Length;
                     if (step2 > gameField.Field.Length-1) step2 = step2 - gameField.Field.Length;
@@ -243,11 +243,8 @@ namespace Backgammon
                         player2Moves = true;
                 }
             }
-            switch (numPlayer)
-            {
-                case '1': isPossible = player1Moves; break;
-                case '2': isPossible = player2Moves; break;
-            }
+            if(Player1.State) isPossible = player1Moves;
+            else isPossible = player2Moves;
             return isPossible;
         }
         /// <summary>
@@ -257,48 +254,47 @@ namespace Backgammon
         /// <param name="newIndex"> The number of the cell where which the checker moves. </param>
         void MoveCheckers(int oldIndex, int newIndex)
         {
+            if (newIndex == -1) return;
             bool firstMove = true;
             int dice3 = 0, dice4 = 0;
-            char numPlayer = '1';
-            if (Player2.State) numPlayer = '2';
             if (Dices[2] == 2) dice3 = dice4 = Dices[0];
             else if (Dices[2] == 1) dice3 = Dices[0];
             int startIndex = 0, countCheckers = 15, step1 = oldIndex + Dices[0], step2 = oldIndex + Dices[1], step3 = oldIndex + Dices[0] + Dices[1],
                 step4 = oldIndex + Dices[0] + Dices[1] + dice3,  step5 = oldIndex + Dices[0] + Dices[1] + dice3 + dice4, flag = 1;
-            switch (numPlayer)
+            if (Player1.State)//if move player 1
             {
-                case '1':
-                    if (gameField.Field[oldIndex] <= 0 || gameField.Field[newIndex] < 0) return;
-                    if (oldIndex > gameField.Field.Length / 2 && newIndex < gameField.Field.Length / 2) return;
-                    break;
-                case '2':
-                    if (gameField.Field[oldIndex] >= 0 || gameField.Field[newIndex] > 0) return;
-                    if (oldIndex < gameField.Field.Length / 2 && newIndex > gameField.Field.Length / 2) return;
-                    startIndex = 12;
-                    countCheckers = -15;
-                    flag = -1;
-                    if (step1 >= gameField.Field.Length) step1 = step1 - gameField.Field.Length;
-                    if (step2 >= gameField.Field.Length) step2 = step2 - gameField.Field.Length;
-                    if (step3 >= gameField.Field.Length) step3 = step3 - gameField.Field.Length;
-                    if (step4 >= gameField.Field.Length) step4 = step4 - gameField.Field.Length;
-                    if (step5 >= gameField.Field.Length) step5 = step5 - gameField.Field.Length;
-                    break;
+                if (gameField.Field[oldIndex] <= 0 || gameField.Field[newIndex] < 0) return;
+                if (oldIndex > gameField.Field.Length / 2 && newIndex < gameField.Field.Length / 2) return;
             }
-            if (gameField.Field[startIndex] == countCheckers)
+            else //if player 2 move
+            {
+                if (gameField.Field[oldIndex] >= 0 || gameField.Field[newIndex] > 0) return;
+                if (oldIndex < gameField.Field.Length / 2 && newIndex > gameField.Field.Length / 2) return;
+                startIndex = 12;
+                countCheckers = -15;
+                flag = -1;
+                //player 2 move in the opposite direction,transforms combination
+                if (step1 >= gameField.Field.Length) step1 = step1 - gameField.Field.Length;
+                if (step2 >= gameField.Field.Length) step2 = step2 - gameField.Field.Length;
+                if (step3 >= gameField.Field.Length) step3 = step3 - gameField.Field.Length;
+                if (step4 >= gameField.Field.Length) step4 = step4 - gameField.Field.Length;
+                if (step5 >= gameField.Field.Length) step5 = step5 - gameField.Field.Length;
+            }
+            if (gameField.Field[startIndex] == countCheckers) //if took a double and values are 4:4 6:6 3:3 at the beginning of the game, the player can move 2 checkers
             {
                 if ((Dices[0] == 6 && Dices[1] == 6) || (Dices[0] == 4 && Dices[1] == 4) || (Dices[0] == 3 && Dices[1] == 3)) firstMove = false;
             }
             else firstMove = false;
-            if (Dices[2] > 0)
+            if (Dices[2] > 0) //if took a double
             {
-                if (step5 == newIndex)
+                if (step5 == newIndex)//move on the sum values of the dices
                 {
                     gameField.Field[oldIndex] -= flag;
                     gameField.Field[newIndex] += flag;
                     Dices[0] = Dices[1] = Dices[2] = 0;
                     return;
                 }
-                else if (step4 == newIndex)
+                else if (step4 == newIndex)//move on the sum values of the three dices
                 {
                     gameField.Field[oldIndex] -= flag;
                     gameField.Field[newIndex] += flag;
@@ -306,7 +302,7 @@ namespace Backgammon
                     return;
                 }
             }
-            if (step3 == newIndex)
+            if (step3 == newIndex) // move on the sum values of the dices
             {
                 gameField.Field[oldIndex] -= flag;
                 gameField.Field[newIndex] += flag;
@@ -315,7 +311,7 @@ namespace Backgammon
                 else Dices[1] = Dices[0] = 0;
                 return;
             }
-            if (step1 == newIndex && !firstMove)
+            if (step1 == newIndex && !firstMove) //move on the first value of the dice
             {
                 gameField.Field[oldIndex] -= flag;
                 gameField.Field[newIndex] += flag;
@@ -323,7 +319,7 @@ namespace Backgammon
                 else Dices[0] = 0;
                 return;
             }
-            if (step2 == newIndex && !firstMove)
+            if (step2 == newIndex && !firstMove) //move on the second value of the dice
             {
                 gameField.Field[oldIndex] -= flag;
                 gameField.Field[newIndex] += flag;
@@ -341,18 +337,13 @@ namespace Backgammon
         public bool CheckedCheckers()
         {
             bool isFirst = false, isSecond = false, result = false;
-            char numPlayer = '1';
-            if (Player2.State) numPlayer = '2';
             for(int i = 0; i<gameField.Field.Length; i++)
             {
                 if (gameField.Field[i] < 0) isSecond = true;
                 else if (gameField.Field[i] > 0) isFirst = true;
             }
-            switch (numPlayer)
-            {
-                case '1': result = isFirst; break;
-                case '2': result = isSecond; break;
-            }
+            if(Player1.State) result = isFirst;
+            else result = isSecond; 
             return result;
         }
     }

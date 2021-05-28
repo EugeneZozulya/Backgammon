@@ -21,9 +21,14 @@ namespace Backgammon
         bool isFocus = false;
         Border border = new Border();
         XML xmlManage = new XML();
+        int offsetChecker1, offsetChecker2;
         public MainWindow()
         {
             InitializeComponent();
+            ColumnDefinitionCollection columns = gameField.ColumnDefinitions;
+            Checker.Width = columns[2].Width.Value;
+            Checker.Height = columns[2].Width.Value;
+            offsetChecker1 = offsetChecker2 = 0;
         }
         /// <summary>
         /// MouseDown event of the label "exit".
@@ -103,7 +108,6 @@ namespace Backgammon
             resultGame.Visibility = Visibility.Visible;
             gameField.Visibility = Visibility.Hidden;
             control.Visibility = Visibility.Hidden;
-            game = null;
         }
         /// <summary>
         /// MouseDown event of the grid "resultGame".
@@ -169,7 +173,9 @@ namespace Backgammon
             saveOrDownload.Visibility = Visibility.Visible;
             dialog.Visibility = Visibility.Visible;
             loadingOrSaving.Content = "Сохранить игру";
-            if(game == null)
+            fileName.IsEnabled = true;
+            fileName.Text = "";
+            if (game == null)
             {
                 fileName.IsEnabled = false;
                 fileName.Text = "Сохранить игру невозмно. Начините/загрузите игру.";
@@ -198,7 +204,7 @@ namespace Backgammon
         /// <param name="e"> Object of MouseButtonEventArgs class. </param>
         private void controlDice_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if(mode == GameMode.playerVsComp && game.Player2.State)
+            if(game.Mode == GameMode.playerVsComp && game.Player2.State)
             {
                 game.Player1.State = !game.Player1.State;
                 game.Player2.State = !game.Player2.State;
@@ -207,6 +213,12 @@ namespace Backgammon
             if (game.Dices[0] != 0 || game.Dices[1] != 0) return;
             game.GenerateDice();
             ShowDice();
+            //if (!game.CheckedMove())
+            //{
+            //    game.Dices[0] = game.Dices[1] = 0;
+            //    game.Player1.State = !game.Player1.State;
+            //    game.Player2.State = !game.Player2.State;
+            //}
         }
         /// <summary>
         /// MouseDown event of the label "backToGame".
@@ -228,6 +240,7 @@ namespace Backgammon
         {
             newGame.Visibility = Visibility.Hidden;
             game = new GameController(mode);
+            offsetChecker1 = offsetChecker2 = 0;
             gameField.Visibility = Visibility.Visible;
             control.Visibility = Visibility.Visible;
             player1Dice.Visibility = Visibility.Hidden;
@@ -263,47 +276,60 @@ namespace Backgammon
         /// <param name="e"> Object of MouseButtonEventArgs class. </param>
         private void loadOrSave_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (game != null)
+            if (loadingOrSaving.Content.ToString() == "Сохранить игру")
             {
-                if (loadingOrSaving.Content.ToString() == "Сохранить игру")
+                if (game != null)
                 {
                     xmlManage.Save(fileName.Text, game);
                     back_MouseDown(null, null);
                 }
-                else
+            }
+            else if(!String.IsNullOrEmpty(fileName.Text))
+            {
+                game = xmlManage.Download(fileName.Text);
+                offsetChecker1 = offsetChecker2 = 0;
+                int player1Checker=0, player2Checker=0;
+                DrawCheckers();
+                UIElementCollection checkers = gameField.Children;
+                //placing checkers on the board
+                for (int i = 1; i < game.gameField.Field.Length; i++)
                 {
-                    game = xmlManage.Download(fileName.Text);
-                    DrawCheckers();
-                    UIElementCollection checkers = gameField.Children;
-                    for (int i = 1; i < game.gameField.Field.Length; i++)
+                    if (i == 12) continue;
+                    int numChecker = game.gameField.Field[i];
+                    int oldRow = 2, oldColumn = 2, newRow, newColumn;
+                    (newRow, newColumn) = CalculateRowAndColumn(i);
+                    if (numChecker < 0)
                     {
-                        if (i == 12) continue;
-                        int numChecker = game.gameField.Field[i];
-                        int oldRow = 2, oldColumn = 2, newRow, newColumn;
-                        (newRow, newColumn) = CalculateRowAndColumn(i);
-                        if (numChecker < 0)
-                        {
-                            numChecker = -numChecker;
-                            oldRow = 1;
-                            oldColumn = 24;
-                        }
-                        int offset = numChecker + 1;
-                        for (int j = checkers.Count - 1; j >= 0 || numChecker > 0; j--)
-                        {
-                            if (Grid.GetColumn(checkers[i]) == oldColumn && Grid.GetRow(checkers[i]) == oldRow)
-                            {
-                                selectedImage = (Image)checkers[i];
-                                Grid.SetColumn(selectedImage, newColumn);
-                                Grid.SetRow(selectedImage, newRow);
-                                Panel.SetZIndex(selectedImage, offset - numChecker);
-                                SetMargin(i, newRow, offset - numChecker - 1, offset - numChecker - 1);
-                                numChecker--;
-                            }
-                        }
+                        numChecker = -numChecker;
+                        oldRow = 1;
+                        oldColumn = 24;
+                        player2Checker += numChecker;
                     }
-                    back_MouseDown(null, null);
-                    backToGame_MouseDown(null, null);
+                    else player1Checker+= numChecker;
+                    int offset = numChecker + 1;
+                    for (int j = checkers.Count-1; j >=0; j--)
+                    {
+                        if (Grid.GetColumn(checkers[j]) == oldColumn && Grid.GetRow(checkers[j]) == oldRow)
+                        {
+                            selectedImage = (Image)checkers[j];
+                            Grid.SetColumn(selectedImage, newColumn);
+                            Grid.SetRow(selectedImage, newRow);
+                            Panel.SetZIndex(selectedImage, offset - numChecker);
+                            SetMargin(i, newRow, offset - numChecker - 1, offset - numChecker - 1);
+                            numChecker--;
+                        }
+                        if (numChecker == 0) break;
+                    }
                 }
+                player1Checker = 15 - player1Checker;
+                player2Checker = 15 - player2Checker;
+                if (player1Checker != 0 || player2Checker != 0)
+                {
+                    PutOnTheBoard(player1Checker, player2Checker);
+                }
+                ShowDice();
+                back_MouseDown(null, null);
+                backToGame_MouseDown(null, null);
             }
         }
         /// <summary>
@@ -393,6 +419,7 @@ namespace Backgammon
         {
             Image checker = (Image)sender;
             if (game.Dices[0] == 0 && game.Dices[1] == 0) return;
+            //draw rectangle around checker
             if ((game.Player1.State && player1Checkers.Contains(checker)) || (game.Player2.State && player2Checkers.Contains(checker)))
             {
                 gameField.Background = Brushes.Transparent;
@@ -422,6 +449,7 @@ namespace Backgammon
         {
             if (selectedImage != null && isFocus)
             {
+                //Calculate number of the row and number of the column of the Grid gameField for moving checker 
                 Point position = e.GetPosition(gameField);
                 ColumnDefinitionCollection columns = gameField.ColumnDefinitions;
                 int oldindex, newIndex, numRow = 1, numColumn;
@@ -441,6 +469,7 @@ namespace Backgammon
                 }
                 else numColumn *= 2;
                 border.BorderThickness = new Thickness(0);
+                //Take a game turn
                 if ((game.CheckedMove() || newIndex == -1) && GameTurn(oldindex, newIndex))
                 {
                     if(newIndex!=-1)
@@ -453,9 +482,17 @@ namespace Backgammon
                     if (newIndex == -1) TakeAwayCheckers(oldindex);
                     else SetMargin(newIndex, numRow, -(game.gameField.Field[newIndex] + 1), (game.gameField.Field[newIndex] - 1));
                 }
+                if (!game.CheckedMove())
+                {
+                    game.Dices[0] = game.Dices[1] = 0;
+                    game.Player1.State = !game.Player1.State;
+                    game.Player2.State = !game.Player2.State;
+                }
                 isFocus = false;
                 gameField.Background = null;
-                if (game.Player2.State && mode == GameMode.playerVsComp) ComputerMove();
+                //if Player 2 is a computer then computer take a game turn
+                if (game.Player2.State && game.Mode == GameMode.playerVsComp) ComputerMove();
+                if (!game.CheckedCheckers()) game = null;
             }
             else if(selectedImage!=null) isFocus = true;
         }
@@ -475,10 +512,17 @@ namespace Backgammon
             {
                 ShowDice();
                 isMove = true;
+                //if player don't have checker on the game board then end game
+                if (!game.CheckedCheckers())
+                {
+                    game.Player1.State = !game.Player1.State;
+                    game.Player2.State = !game.Player2.State;
+                    controlSurrender_MouseDown(null, null);
+                    return false;
+                }
                 if (game.Dices[0] == 0 && game.Dices[1] == 0 && game.Dices[2] == 0)
                 {
-                    if (!game.CheckedCheckers()) controlSurrender_MouseDown(null, null);
-                    if (mode == GameMode.playerVsPlayer || game.Player1.State)
+                    if (game.Mode == GameMode.playerVsPlayer || game.Player1.State)
                     {
                         game.Player1.State = !game.Player1.State;
                         game.Player2.State = !game.Player2.State;
@@ -511,21 +555,23 @@ namespace Backgammon
         /// <param name="oldindex">The number of the cell from which the checker moves. </param>
         private void TakeAwayCheckers(int oldindex)
         {
-            if (oldindex > 17 && oldindex <24)
+            if (oldindex > 17 && oldindex <24 && game.CheckedFirstHome())
             {
                 Grid.SetRow(selectedImage, 2);
                 Grid.SetColumn(selectedImage, 27);
-                selectedImage.Margin = new Thickness(0, 0, 0, 10 * -(game.gameField.Field[oldindex] - 14));
+                selectedImage.Margin = new Thickness(0, 0, 0, 10 * offsetChecker1);
                 selectedImage.VerticalAlignment = VerticalAlignment.Bottom;
-                Panel.SetZIndex(selectedImage, 15 - game.gameField.Field[oldindex]);
+                Panel.SetZIndex(selectedImage, 15 - offsetChecker1);
+                offsetChecker1++;
             }
-            else if (oldindex > 5 && oldindex < 12)
+            else if (oldindex > 5 && oldindex < 12 && game.CheckedSecondHome())
             {
                 Grid.SetRow(selectedImage, 1);
                 Grid.SetColumn(selectedImage, 27);
-                selectedImage.Margin = new Thickness(0, 10 * (game.gameField.Field[oldindex] + 14), 0, 0);
+                selectedImage.Margin = new Thickness(0, 10 * offsetChecker2, 0, 0);
                 selectedImage.VerticalAlignment = VerticalAlignment.Top;
-                Panel.SetZIndex(selectedImage, 15 + game.gameField.Field[oldindex]);
+                Panel.SetZIndex(selectedImage, 15 + offsetChecker2);
+                offsetChecker2++;
             }
         }
         /// <summary>
@@ -564,10 +610,12 @@ namespace Backgammon
             int newIndex, oldIndex;
             game.GenerateDice();
             Computer computer = (Computer)game.Player2;
+            //take a game turn
             if ((!game.CheckedMove() && game.CheckedSecondHome()) || game.CheckedMove())
             {
                 while (game.Dices[0] != 0 || game.Dices[1] != 0)
                 {
+                    //Calculate number of the row and number of the column of the Grid gameField for moving checker
                     (oldIndex, newIndex) = computer.SearchGameTurn(game.Dices, game.gameField, game.CheckedSecondHome());
                     if (newIndex == -2) break;
                     GameTurn(oldIndex, newIndex);
@@ -575,6 +623,7 @@ namespace Backgammon
                     (oldRow, oldColumn) = CalculateRowAndColumn(oldIndex);
                     (newRow, newColumn) = CalculateRowAndColumn(newIndex);
                     UIElementCollection checkers = gameField.Children;
+                    //Moving checker
                     for (int i = checkers.Count-1; i >= 0; i--)
                     {
                         if (Grid.GetColumn(checkers[i]) == oldColumn && Grid.GetRow(checkers[i]) == oldRow) //&& Panel.GetZIndex(checkers[i]) == (-(game.gameField.Field[oldIndex] - 1))
@@ -599,8 +648,8 @@ namespace Backgammon
         private void ShowFileInfo()
         {
             ItemCollection collection = listDialog.Items;
-            for (int i = 0; i < collection.Count; i++)
-                listDialog.Items.RemoveAt(i);
+            while(collection.Count!=0)
+                listDialog.Items.Remove(collection[0]);
             string[] fileNames, fileInfo;
             (fileNames, fileInfo) = xmlManage.SearchSave();
             if (fileNames != null && fileInfo != null)
@@ -637,11 +686,43 @@ namespace Backgammon
             if (game != null || (game == null && loadingOrSaving.Content.ToString() != "Сохранить игру"))
             {
                 System.Collections.IList collection = e.AddedItems;
-                string name = (string)collection[0], flName;
-                int index = name.LastIndexOf(".xml");
-                index = index + 4;
-                flName = name.Substring(0, index);
-                fileName.Text = flName;
+                if (collection.Count != 0)
+                {
+                    string name = (string)collection[0], flName;
+                    int index = name.LastIndexOf(".xml");
+                    index = index + 4;
+                    flName = name.Substring(0, index);
+                    fileName.Text = flName;
+                }
+            }
+        }
+        /// <summary>
+        /// Put checker on the side of the board.
+        /// </summary>
+        /// <param name="numPlayer1Checkers"> Number of player 1 checker on the side of the board. </param>
+        /// <param name="numPlayer2Checkers"> Number of player 2 checker on the side of the board. </param>
+        private void PutOnTheBoard(int numPlayer1Checkers, int numPlayer2Checkers)
+        {
+            UIElementCollection checkers = gameField.Children;
+            int oldColumn1 = 2, oldColumn2 = 24, oldRow1 = 2, oldRow2 = 1;
+            for (int j = checkers.Count - 1; j >= 0; j--)
+            {
+                int oldindex;
+                selectedImage = (Image)checkers[j];
+                if (Grid.GetColumn(checkers[j]) == oldColumn1 && Grid.GetRow(checkers[j]) == oldRow1 && numPlayer1Checkers!=0)
+                {
+                    oldindex = 19;
+                    TakeAwayCheckers(oldindex);
+                    numPlayer1Checkers--;
+                    if (numPlayer1Checkers == 0) break;
+                }
+                else if(Grid.GetColumn(checkers[j]) == oldColumn2 && Grid.GetRow(checkers[j]) == oldRow2 && numPlayer2Checkers != 0)
+                {
+                    oldindex = 9;
+                    TakeAwayCheckers(oldindex);
+                    numPlayer2Checkers--;
+                    if (numPlayer2Checkers == 0) break;
+                }
             }
         }
     }

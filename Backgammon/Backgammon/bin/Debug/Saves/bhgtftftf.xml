@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <GameController>
   <Dices>
-    <int>2</int>
-    <int>3</int>
+    <int>4</int>
+    <int>5</int>
     <int>0</int>
-    <int>2</int>
-    <int>3</int>
+    <int>4</int>
+    <int>5</int>
   </Dices>
   <Mode>
     <GameMode>playerVsComp</GameMode>
@@ -16,7 +16,7 @@
     </State>
     <Checker>
       <Color>
-        <CheckerColor>White</CheckerColor>
+        <CheckerColor>Black</CheckerColor>
       </Color>
     </Checker>
   </Player1>
@@ -26,20 +26,20 @@
     </State>
     <Checker>
       <Color>
-        <CheckerColor>Black</CheckerColor>
+        <CheckerColor>White</CheckerColor>
       </Color>
     </Checker>
   </Player2>
   <gameField>
     <Field>
-      <int>11</int>
-      <int>1</int>
+      <int>13</int>
+      <int>0</int>
+      <int>0</int>
       <int>0</int>
       <int>0</int>
       <int>1</int>
-      <int>1</int>
-      <int>1</int>
       <int>0</int>
+      <int>1</int>
       <int>0</int>
       <int>0</int>
       <int>0</int>
@@ -47,13 +47,13 @@
       <int>-12</int>
       <int>0</int>
       <int>0</int>
-      <int>-1</int>
-      <int>0</int>
-      <int>-1</int>
       <int>0</int>
       <int>0</int>
       <int>-1</int>
       <int>0</int>
+      <int>0</int>
+      <int>0</int>
+      <int>-2</int>
       <int>0</int>
       <int>0</int>
     </Field>
