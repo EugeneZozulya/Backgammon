@@ -15,12 +15,17 @@ namespace Backgammon
     {
         GameController game;
         GameMode mode;
+        //Selected checker
         Image selectedImage;
+        //Representation checkers of each player
         List<Image> player1Checkers;
         List<Image> player2Checkers;
+        //Checker focus
         bool isFocus = false;
+        //Chekcer outline
         Border border = new Border();
         XML xmlManage = new XML();
+        //Offset for checker take away 
         int offsetChecker1, offsetChecker2;
         public MainWindow()
         {
@@ -103,7 +108,7 @@ namespace Backgammon
             ImageSource winPlayer2 = new BitmapImage(new Uri("pack://application:,,,/Backgammon;component/Image/WinPlayer2.png", UriKind.RelativeOrAbsolute));
             ImageSource winComp = new BitmapImage(new Uri("pack://application:,,,/Backgammon;component/Image/WinComp.png", UriKind.RelativeOrAbsolute));
             if (game.Player1.State && game.Mode == GameMode.playerVsPlayer) resultGame.Background = new ImageBrush(winPlayer2);
-            else if (game.Player2.State && game.Mode == GameMode.playerVsPlayer) resultGame.Background = new ImageBrush(winPlayer1);
+            else if (game.Player2.State) resultGame.Background = new ImageBrush(winPlayer1);
             else resultGame.Background = new ImageBrush(winComp);
             resultGame.Visibility = Visibility.Visible;
             gameField.Visibility = Visibility.Hidden;
@@ -484,7 +489,9 @@ namespace Backgammon
                     if (newIndex == -1) TakeAwayCheckers(oldindex);
                     else SetMargin(newIndex, numRow, -(game.gameField.Field[newIndex] + 1), (game.gameField.Field[newIndex] - 1));
                 }
-                if (!game.CheckedMove() && !game.CheckedTakingAway())
+                if (!game.CheckedCheckers()) return;
+                //if player can't move and take away checker
+                if ((!game.CheckedMove() && !game.CheckedTakingAway()) ||(game.Dices[0] == 0 && game.Dices[1] == 0 && game.Dices[2] == 0))
                 {
                     game.Dices[0] = game.Dices[1] = 0;
                     game.Player1.State = !game.Player1.State;
@@ -510,6 +517,7 @@ namespace Backgammon
             if(newIndex>=0 ) countCheckers = game.gameField.Field[newIndex];
             bool isMove = false;
             game.TakeGameTurn(oldIndex, newIndex);
+            //if player took a game turn
             if (newIndex== -1 || (game.Player1.State && countCheckers < game.gameField.Field[newIndex]) || (game.Player2.State && countCheckers > game.gameField.Field[newIndex]))
             {
                 ShowDice();
@@ -521,14 +529,6 @@ namespace Backgammon
                     game.Player2.State = !game.Player2.State;
                     controlSurrender_MouseDown(null, null);
                     return false;
-                }
-                if (game.Dices[0] == 0 && game.Dices[1] == 0 && game.Dices[2] == 0)
-                {
-                    if (game.Mode == GameMode.playerVsPlayer || game.Player1.State)
-                    {
-                        game.Player1.State = !game.Player1.State;
-                        game.Player2.State = !game.Player2.State;
-                    }
                 }
             }
             return isMove;
@@ -633,6 +633,7 @@ namespace Backgammon
                         if (Grid.GetColumn(checkers[i]) == oldColumn && Grid.GetRow(checkers[i]) == oldRow)
                         {
                             selectedImage = (Image)checkers[i];
+                            //if computer take away a checker
                             if (newIndex == -1) TakeAwayCheckers(oldIndex);
                             else
                             {
@@ -644,6 +645,7 @@ namespace Backgammon
                             break;
                         }
                     }
+                    //if computer can't take away a checker
                     if (game.Player2.State && game.CheckedSecondHome() && !game.CheckedTakingAway()) game.Dices[0] = game.Dices[1] = 0;
                 }
             }

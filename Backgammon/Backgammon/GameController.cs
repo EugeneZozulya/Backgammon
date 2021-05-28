@@ -158,7 +158,7 @@ namespace Backgammon
         /// <param name="oldIndex"> The number of the cell from which the checker moves. </param>
         void TakeAway(int oldIndex)
         {
-            int length = gameField.Field.Length, flag = 1;
+            int length = gameField.Field.Length, flag = 1, numChecker = gameField.Field[oldIndex];
             int dice3 = 0, dice4 = 0;
             if (Dices[2] == 2) dice3 = dice4 = Dices[0];
             else if (Dices[2] == 1) dice3 = Dices[0];
@@ -180,7 +180,7 @@ namespace Backgammon
                     Dices[1] = Dices[2] = 0;
                 }
             }
-            else
+            if(numChecker==gameField.Field[oldIndex]) 
             {
                 if ((oldIndex + Dices[0] + Dices[1]) == length) // take away on the sum values of the dices
                 {
@@ -355,13 +355,15 @@ namespace Backgammon
             bool result = false;
             int step = 0;
             if (Dices[2] == 2) step = Dices[0] + Dices[1];
-            if (Player2.State)
+            if (Player1.State)
             {
+                //brute force combination for player 1
                 for (int i = 18; i < gameField.Field.Length; i++)
                     if (gameField.Field[i]>0 &&((i + Dices[0] == gameField.Field.Length) || (i + Dices[1] == gameField.Field.Length) || (i + Dices[1] + Dices[0] == gameField.Field.Length) || (i + Dices[1] + Dices[0] + step == gameField.Field.Length))) result = true;
             }
             else
             {
+                //brute force combination for player 2
                 for (int i = 6; i < gameField.Field.Length/2; i++)
                     if (gameField.Field[i] < 0 && ((i + Dices[0] == gameField.Field.Length/2) || (i + Dices[1] == gameField.Field.Length/2) || (i + Dices[1] + Dices[0] == gameField.Field.Length/2) || (i + Dices[1] + Dices[0] + step == gameField.Field.Length/2))) result = true;
             }
